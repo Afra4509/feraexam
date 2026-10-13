@@ -1,0 +1,28 @@
+# Build outputs and temporary directories
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+packages/
+
+# Release and backup folders
+backup_*/
+FeraExam_Release/
+installer_output/
+ux_extracted/
+
+# Root binary artifacts
+kufra.exe
+seb_x64.dll
+Setup_x64.msi
+SEBConfigTool.exe
+nuget.exe
+SafeExamBrowser.exe
+SafeExamBrowser.Client.exe
+
+# Log and temp files
+*.log
+*.tmp

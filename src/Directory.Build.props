@@ -1,0 +1,8 @@
+<Project>
+	<PropertyGroup>
+		<TargetFrameworkRootPath>C:\Users\FeraGaming\.nuget\packages\microsoft.netframework.referenceassemblies.net48\1.0.3\build</TargetFrameworkRootPath>
+	</PropertyGroup>
+	<PropertyGroup Label="Show only relative paths in stacktraces" Condition="$(Configuration) == 'Release'">
+		<PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=.\</PathMap>
+	</PropertyGroup>
+</Project>
