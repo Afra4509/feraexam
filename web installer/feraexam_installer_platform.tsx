@@ -37,118 +37,73 @@ import {
 } from 'lucide-react';
 
 const DEFAULT_RELEASE_CONFIG = {
-  version: '2.4.1',
-  releaseDate: 'October 12, 2026',
+  version: '3.8.0',
+  releaseDate: 'October 13, 2026',
   platform: 'Windows 10 / 11 (64-bit)',
-  architecture: 'x86_64',
-  filename: 'FeraExam-Setup-v2.4.1.exe',
-  fileSize: '84.6 MB',
-  downloadUrl: 'https://releases.aefera.internal/feraexam/v2.4.1/FeraExam-Setup-v2.4.1.exe',
-  sha256: '9f83a48e6c7104b2e88a381fb6b221d6092e07171c775080c9849ef9b578cf23',
+  architecture: 'x64',
+  filename: 'FeraExam_Setup.exe',
+  fileSize: '139.9 MB',
+  downloadUrl: 'https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Setup.exe',
+  sha256: 'Official Release v3.8.0 - Authenticated Binary',
   releaseChannel: 'Production Stable',
   minRam: '4 GB RAM (8 GB Recommended)',
-  minDiskSpace: '250 MB Free Space',
-  signatureIssuer: 'AEFERA Cryptographic Security Org',
-  customLogoUrl: ''
+  minDiskSpace: '500 MB Free Space',
+  signatureIssuer: 'FeraExam Open Source Release (Afra4509)',
+  customLogoUrl: './logo.png'
 };
 
 const CHANGELOG_DATA = [
   {
-    version: 'v2.4.1',
-    date: 'October 12, 2026',
-    channel: 'Stable',
+    version: 'v3.8.0',
+    date: 'October 13, 2026',
+    channel: 'Stable (Latest)',
     isLatest: true,
-    highlights: 'Critical security patch & Windows 11 24H2 display isolation compatibility.',
+    highlights: 'Rilis Perdana Resmi FeraExam: Total Rebranding dari Safe Exam Browser (SEB), Chromium GPU acceleration, screenshot allowed, zero kiosk freeze, dan setup wizard mandiri.',
     sections: {
       newFeatures: [
-        'Enhanced hardware-accelerated kiosk window pinning prevents external overlay interruptions.',
-        'Zero-trust network heartbeat for instant student connection continuity.'
+        'Dukungan Screenshot Penuh: SetWindowDisplayAffinity dinonaktifkan sehingga capture layar pengawas dan proctoring dapat berjalan tanpa blackout.',
+        'Universal Web Compatibility: Akses ke seluruh web ujian online dibuka tanpa hambatan URL filter berlebih.',
+        'Smart Client Auto-Redirect: Eksekusi langsung FeraExam.Client.exe otomatis dialihkan ke launcher utama FeraExam.exe tanpa crash.',
+        'Single-File Setup Installer: Paket instalasi mandiri terkompresi ultra LZMA2 (139.9 MB) lengkap dengan shortcut desktop, start menu, dan uninstaller.'
       ],
       improvements: [
-        'Installer payload compressed with LZMA2, reducing binary size to 84.6 MB.',
-        'Reduced startup benchmark latency from 1.8s down to 420ms on NVMe storage.',
-        'Refined dual-monitor lockdown logic with automated resolution detection.'
+        'Ultra-Fast Chromium Engine: GPU Accelerated Rasterization (enable-gpu-rasterization) & Zero-Copy Buffering (enable-zero-copy).',
+        'Startup Cepat & Bebas Telemetri: Pemangkasan background telemetry & automatic network syncing bawaan Chromium untuk cold boot instan.',
+        'Native 32-bit DIB Bitmap Icons: Seluruh format ikon dikonversi ke DIB Bitmap native untuk stabilitas 100% pada WPF .NET Framework 4.8.',
+        'Total Rebranding Visual: Title bar, metadata assembly, splash screen, dan 12 file translasi I18n diperbarui ke identitas FeraExam.'
       ],
       fixes: [
-        'Resolved intermittent secondary screen flicker on custom DPI scaling configurations.',
-        'Fixed clipboard sanitizer loop when hotkey combination Ctrl+Alt+Ins is triggered.',
-        'Corrected silent exit crash when running on localized non-Latin Windows user profiles.'
+        'Memperbaiki exception TypeConverterMarkupExtension pada saat WPF memuat ikon di Windows 10/11.',
+        'Menghilangkan error Fatal Error: Invalid arguments saat sub-proses client dibuka secara mandiri.',
+        'Menghilangkan delay/hang saat menutup jendela runtime ujian.'
       ],
       knownIssues: [
-        'Experimental ARM64 emulation on Snapdragon X Elite requires manual driver signing exception.'
+        'Dukungan platform macOS & Linux direncanakan pada roadmap pembaruan berikutnya.'
       ]
-    }
-  },
-  {
-    version: 'v2.4.0',
-    date: 'September 18, 2026',
-    channel: 'Major Release',
-    isLatest: false,
-    highlights: 'Complete rewrite of the core containment sandbox engine and secure audio-video monitor pipeline.',
-    sections: {
-      newFeatures: [
-        'Next-generation process sandbox prevents background virtualization instances.',
-        'Encrypted local exam buffer cache protects answers during unexpected local network drops.',
-        'Unified AEFERA Diagnostic Utility integrated directly inside installer options.'
-      ],
-      improvements: [
-        'Modernized dark hellfire UI theming across the student examination interface.',
-        'Reduced peak memory footprint to under 90MB during active exam sessions.'
-      ],
-      fixes: [
-        'Patched shortcut injection through Windows Accessibility Ease-of-Access tools.',
-        'Resolved font rendering artifact on high-refresh 144Hz+ gaming displays.'
-      ],
-      knownIssues: [
-        'None identified in current release channel.'
-      ]
-    }
-  },
-  {
-    version: 'v2.3.2',
-    date: 'August 04, 2026',
-    channel: 'Maintenance',
-    isLatest: false,
-    highlights: 'Maintenance update delivering TLS 1.3 session resumption and certificate pin enforcement.',
-    sections: {
-      newFeatures: [
-        'Configurable proxy traversal for institutional campus networks with custom enterprise root certs.'
-      ],
-      improvements: [
-        'Streamlined installer step wizard with silent argument support (/S /D=C:\\FeraExam).'
-      ],
-      fixes: [
-        'Fixed taskbar edge bleed-through when using taskbar auto-hide mode on Windows 10.'
-      ],
-      knownIssues: []
     }
   }
 ];
 
 const FAQ_DATA = [
   {
-    question: 'What is FeraExam and who develops it?',
-    answer: 'FeraExam is a dedicated, high-performance examination environment developed by AEFERA. Designed to establish a focused, distraction-free, and locked-down test-taking workspace, FeraExam ensures academic integrity while maintaining a lightweight footprint on host machines.'
+    question: 'Apa itu FeraExam dan apa bedanya dengan Safe Exam Browser (SEB)?',
+    answer: 'FeraExam adalah browser ujian modern yang dikembangkan berbasis Safe Exam Browser (SEB). FeraExam telah dirombak total dengan performa lebih cepat (Chromium berakselerasi GPU), fleksibilitas penuh (screenshot diizinkan dan support seluruh website ujian), identitas visual baru, serta penanganan error otomatis yang ramah pengguna.'
   },
   {
-    question: 'How do I download and install FeraExam?',
-    answer: 'Click the "Download for Windows" button above to obtain the official FeraExam-Setup executable. Once downloaded, double-click the installer, review the destination directory, and complete the guided wizard. FeraExam will perform a fast self-integrity check upon first launch.'
+    question: 'Apakah FeraExam mengizinkan screenshot dan capture layar?',
+    answer: 'Ya! Fitur anti-screenshot (DisplayAffinity Guard) telah dinonaktifkan secara khusus di FeraExam. Pengawas atau sistem proctoring dapat mengambil tangkapan layar tanpa terhalang layar hitam (blackout).'
   },
   {
-    question: 'Which operating systems and hardware platforms are supported?',
-    answer: 'FeraExam v2.4.1 is officially certified for Windows 10 (64-bit, Version 20H2+) and Windows 11 (64-bit). It requires an x86_64 architecture processor, at least 4 GB of RAM, and 250 MB of free storage. Dedicated macOS and Linux client binaries are currently in private beta testing.'
+    question: 'Apakah FeraExam bisa membuka semua website ujian online?',
+    answer: 'Ya, seluruh konfigurasi filter URL yang kaku telah disesuaikan agar FeraExam dapat memuat Google Forms, Quizizz, Moodle, Kahoot, portal CBT sekolah/kampus, dan LMS berbasis web modern tanpa pesan "Page Blocked".'
   },
   {
-    question: 'How can I verify the installer SHA-256 checksum?',
-    answer: 'You can verify the cryptographic hash directly in your browser using our built-in SHA-256 Verification tool on this page, or locally via PowerShell by executing: `Get-FileHash .\\FeraExam-Setup-v2.4.1.exe -Algorithm SHA256`. Match the output hash with the one listed on this official portal.'
+    question: 'Bagaimana cara menginstal FeraExam di Windows?',
+    answer: 'Cukup unduh FeraExam_Setup.exe dari halaman ini atau GitHub Releases, jalankan wizard instalasi, dan ikuti instruksi 1-klik. FeraExam akan langsung tersedia di Desktop dan Start Menu Anda.'
   },
   {
-    question: 'What should I do if Windows SmartScreen displays a warning?',
-    answer: 'Windows SmartScreen may display an alert for newly updated release builds while the Microsoft global reputation cache updates. To continue, click "More info" and verify the Publisher says "AEFERA" before clicking "Run anyway". Never disable your antivirus protection.'
-  },
-  {
-    question: 'How do I report bugs or submit security advisories?',
-    answer: 'Technical issues, bug logs, and verified security advisories can be submitted through AEFERA Security Portal or by emailing security@aefera.org with diagnostic system information and replication steps.'
+    question: 'Apakah tersedia versi portable tanpa perlu install?',
+    answer: 'Ya, kami juga menyediakan paket FeraExam_Portable_v3.8.0.zip di GitHub Release. Cukup ekstrak filenya ke folder mana saja dan klik ganda FeraExam.exe.'
   }
 ];
 
@@ -245,18 +200,6 @@ const EmbersBackground = () => {
 };
 
 const FeraExamLogo = ({ size = 'default', customUrl = '', className = '' }) => {
-  if (customUrl) {
-    return (
-      <div className={`relative flex items-center justify-center ${className}`}>
-        <img
-          src={customUrl}
-          alt="FeraExam Official Logo"
-          className="w-full h-full object-contain filter drop-shadow-[0_0_35px_rgba(255,43,34,0.65)]"
-        />
-      </div>
-    );
-  }
-
   const dimensions =
     size === 'small'
       ? 'w-10 h-10'
@@ -266,199 +209,24 @@ const FeraExamLogo = ({ size = 'default', customUrl = '', className = '' }) => {
       ? 'w-72 h-72 sm:w-88 sm:h-88 md:w-96 md:h-96'
       : 'w-20 h-20';
 
+  const logoSrc = customUrl || './logo.png';
+
   return (
-    <div className={`relative group select-none ${dimensions} ${className}`}>
+    <div className={`relative group select-none flex items-center justify-center ${dimensions} ${className}`}>
       {/* Outer volcanic aura glow */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#FF2B22]/30 via-[#FF6A24]/20 to-[#155EEF]/20 blur-2xl group-hover:blur-3xl transition-all duration-700 pointer-events-none" />
+      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#FF2B22]/40 via-[#FF6A24]/30 to-[#155EEF]/30 blur-2xl group-hover:blur-3xl transition-all duration-700 pointer-events-none" />
 
-      {/* SVG Emblem representing: Sinister white cat mascot holding devil mask, blue-orange globe with key, and fiery hellcrest */}
-      <svg
-        viewBox="0 0 400 400"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full drop-shadow-[0_15px_30px_rgba(255,43,34,0.45)] transition-transform duration-500 hover:scale-[1.02]"
-      >
-        <defs>
-          <linearGradient id="fireShieldGrad" x1="50" y1="20" x2="350" y2="380" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#1a0605" />
-            <stop offset="35%" stopColor="#2c0906" />
-            <stop offset="70%" stopColor="#0d0d0d" />
-            <stop offset="100%" stopColor="#060606" />
-          </linearGradient>
-
-          <linearGradient id="lavaBorder" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FF6A24" />
-            <stop offset="45%" stopColor="#FF2B22" />
-            <stop offset="85%" stopColor="#7a0d08" />
-            <stop offset="100%" stopColor="#155EEF" />
-          </linearGradient>
-
-          <radialGradient id="hellAura" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FF2B22" stopOpacity="0.45" />
-            <stop offset="55%" stopColor="#FF6A24" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-          </radialGradient>
-
-          <linearGradient id="globeGrad" x1="260" y1="180" x2="350" y2="290" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#155EEF" />
-            <stop offset="45%" stopColor="#0B3CB0" />
-            <stop offset="80%" stopColor="#FF6A24" />
-            <stop offset="100%" stopColor="#FF2B22" />
-          </linearGradient>
-
-          <linearGradient id="keyGold" x1="280" y1="200" x2="340" y2="280" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FFE17D" />
-            <stop offset="50%" stopColor="#FFB319" />
-            <stop offset="100%" stopColor="#B37700" />
-          </linearGradient>
-
-          <linearGradient id="devilMaskGrad" x1="100" y1="190" x2="190" y2="290" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FF2B22" />
-            <stop offset="60%" stopColor="#9C0A04" />
-            <stop offset="100%" stopColor="#4A0200" />
-          </linearGradient>
-
-          <filter id="infernoGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="8" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-
-        {/* Ambient fiery backdrop aura */}
-        <circle cx="200" cy="200" r="175" fill="url(#hellAura)" />
-
-        {/* Shield / Crest Contour */}
-        <path
-          d="M200 24 L340 78 V200 C340 292 278 356 200 382 C122 356 60 292 60 200 V78 L200 24 Z"
-          fill="url(#fireShieldGrad)"
-          stroke="url(#lavaBorder)"
-          strokeWidth="6"
-        />
-
-        {/* Hellfire tongues rising in crest background */}
-        <path
-          d="M110 320 Q140 250 155 280 T200 210 Q245 280 255 240 T295 320 C265 348 235 365 200 376 C165 365 135 348 110 320 Z"
-          fill="#FF2B22"
-          opacity="0.25"
-        />
-        <path
-          d="M135 335 Q170 270 185 295 T225 245 Q260 300 275 330 C248 355 225 368 200 375 C175 368 152 355 135 335 Z"
-          fill="#FF6A24"
-          opacity="0.3"
-        />
-
-        {/* --- SINISTER WHITE CAT MASCOT --- */}
-        {/* Cat ears with inner shadow */}
-        <path d="M142 145 L118 72 L182 112 Z" fill="#F0F0F5" stroke="#D1D5DB" strokeWidth="2.5" />
-        <path d="M140 135 L126 88 L170 114 Z" fill="#FF2B22" opacity="0.6" />
-
-        <path d="M258 145 L282 72 L218 112 Z" fill="#F0F0F5" stroke="#D1D5DB" strokeWidth="2.5" />
-        <path d="M260 135 L274 88 L230 114 Z" fill="#FF2B22" opacity="0.6" />
-
-        {/* Cat Head Shape */}
-        <path
-          d="M145 135 C120 160 120 205 145 230 C165 250 235 250 255 230 C280 205 280 160 255 135 C225 110 175 110 145 135 Z"
-          fill="#FAFAFC"
-          stroke="#D4D4D8"
-          strokeWidth="3"
-        />
-
-        {/* Sinister Red Glowing Cat Eyes */}
-        <ellipse cx="168" cy="172" rx="14" ry="11" fill="#FF1E16" filter="url(#infernoGlow)" />
-        <ellipse cx="232" cy="172" rx="14" ry="11" fill="#FF1E16" filter="url(#infernoGlow)" />
-        {/* Slit pupils */}
-        <path d="M168 163 C170 167 170 177 168 181 C166 177 166 167 168 163 Z" fill="#150201" />
-        <path d="M232 163 C234 167 234 177 232 181 C230 177 230 167 232 163 Z" fill="#150201" />
-
-        {/* Cat nose & sinister subtle smirk */}
-        <polygon points="196,192 204,192 200,198" fill="#FF6A24" />
-        <path d="M192 204 Q200 209 208 204" stroke="#27272A" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-        <path d="M184 207 Q192 214 200 207 Q208 214 216 207" stroke="#27272A" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-
-        {/* Cat Whiskers */}
-        <line x1="130" y1="188" x2="105" y2="182" stroke="#A1A1AA" strokeWidth="2" strokeLinecap="round" />
-        <line x1="128" y1="198" x2="100" y2="198" stroke="#A1A1AA" strokeWidth="2" strokeLinecap="round" />
-        <line x1="270" y1="188" x2="295" y2="182" stroke="#A1A1AA" strokeWidth="2" strokeLinecap="round" />
-        <line x1="272" y1="198" x2="300" y2="198" stroke="#A1A1AA" strokeWidth="2" strokeLinecap="round" />
-
-        {/* --- DEVIL MASK (HELD IN LEFT PAW) --- */}
-        <g transform="translate(4, 12)">
-          {/* Paw holding mask */}
-          <ellipse cx="140" cy="245" rx="16" ry="12" fill="#FFFFFF" stroke="#D1D5DB" strokeWidth="2" />
-
-          {/* Devil Mask with Horns */}
-          <path
-            d="M102 240 L88 205 L112 222 Z"
-            fill="#FF2B22"
-            stroke="#9C0A04"
-            strokeWidth="2"
-          />
-          <path
-            d="M168 240 L182 205 L158 222 Z"
-            fill="#FF2B22"
-            stroke="#9C0A04"
-            strokeWidth="2"
-          />
-          <path
-            d="M105 235 C95 255 98 285 118 298 C135 310 155 305 168 285 C178 270 176 248 165 235 C148 225 120 225 105 235 Z"
-            fill="url(#devilMaskGrad)"
-            stroke="#FF6A24"
-            strokeWidth="2.5"
-          />
-          {/* Mask eye cutouts */}
-          <path d="M118 255 L132 258 L122 265 Z" fill="#090909" />
-          <path d="M154 255 L140 258 L150 265 Z" fill="#090909" />
-          {/* Menacing fanged grin on mask */}
-          <path d="M122 280 Q136 292 150 280 L146 286 L140 282 L134 286 L128 282 Z" fill="#FFEFEF" />
-        </g>
-
-        {/* --- BLUE & ORANGE GLOBE WITH GOLD KEY (RIGHT SIDE) --- */}
-        <g transform="translate(10, -5)">
-          {/* Globe Sphere */}
-          <circle cx="282" cy="245" r="38" fill="url(#globeGrad)" stroke="#FF6A24" strokeWidth="3" />
-          {/* Longitude and Latitude grid on globe */}
-          <ellipse cx="282" cy="245" rx="20" ry="38" fill="none" stroke="#60A5FA" strokeWidth="1.5" opacity="0.6" />
-          <ellipse cx="282" cy="245" rx="38" ry="16" fill="none" stroke="#60A5FA" strokeWidth="1.5" opacity="0.6" />
-
-          {/* Electric Blue Core Ring */}
-          <circle cx="282" cy="245" r="38" fill="none" stroke="#155EEF" strokeWidth="2.5" opacity="0.8" />
-
-          {/* Glowing Golden Key Crossing the Globe */}
-          <g transform="rotate(-30 282 245)">
-            {/* Key Bow */}
-            <circle cx="270" cy="215" r="14" fill="none" stroke="url(#keyGold)" strokeWidth="4.5" />
-            <circle cx="270" cy="215" r="6" fill="#0B132B" stroke="url(#keyGold)" strokeWidth="2" />
-            {/* Key Shaft */}
-            <line x1="270" y1="229" x2="270" y2="280" stroke="url(#keyGold)" strokeWidth="5" strokeLinecap="round" />
-            {/* Key Bits */}
-            <line x1="270" y1="265" x2="284" y2="265" stroke="url(#keyGold)" strokeWidth="4.5" strokeLinecap="round" />
-            <line x1="270" y1="276" x2="282" y2="276" stroke="url(#keyGold)" strokeWidth="4.5" strokeLinecap="round" />
-          </g>
-        </g>
-
-        {/* AEFERA Ribbon / Wordmark Crest at Bottom */}
-        <path
-          d="M120 338 L200 326 L280 338 L265 362 L200 354 L135 362 Z"
-          fill="#111111"
-          stroke="#FF2B22"
-          strokeWidth="2"
-        />
-        <text
-          x="200"
-          y="348"
-          textAnchor="middle"
-          fill="#F5F5F5"
-          fontSize="13"
-          fontWeight="900"
-          fontFamily="monospace"
-          letterSpacing="4"
-        >
-          AEFERA
-        </text>
-
-        {/* Crown Horns / Hellfire crest top spike */}
-        <path d="M200 38 L208 65 L200 62 L192 65 Z" fill="#FF6A24" />
-      </svg>
+      {/* Official FeraExam Logo Image */}
+      <img
+        src={logoSrc}
+        alt="FeraExam Official Emblem"
+        onError={(e) => {
+          if (e.currentTarget.src.indexOf('logo%20github.png') === -1) {
+            e.currentTarget.src = './logo github.png';
+          }
+        }}
+        className="relative z-10 w-full h-full object-contain rounded-2xl drop-shadow-[0_15px_35px_rgba(255,43,34,0.55)] transition-transform duration-500 hover:scale-[1.03]"
+      />
     </div>
   );
 };
@@ -507,7 +275,7 @@ const Navbar = ({ config, onOpenConfig, onOpenHashTool }) => {
                 </span>
               </div>
               <span className="text-[10px] tracking-widest text-[#A1A1AA] uppercase font-mono">
-                BY AEFERA
+                BY AFRA4509
               </span>
             </div>
           </a>
@@ -650,7 +418,7 @@ const HeroSection = ({ config, onInitiateDownload, onOpenHashTool }) => {
               </span>
               <span className="text-[#A1A1AA] text-xs">|</span>
               <span className="text-[11px] font-mono text-[#155EEF] font-semibold">
-                AEFERA SECURE
+                FERAEXAM SECURE
               </span>
             </div>
 
@@ -663,7 +431,7 @@ const HeroSection = ({ config, onInitiateDownload, onOpenHashTool }) => {
                 </span>
               </h1>
               <p className="text-lg sm:text-xl text-[#A1A1AA] max-w-xl font-normal leading-relaxed">
-                One installer. A focused examination experience. Engineered for deterministic lockdown and zero interruption. Built by AEFERA.
+                One installer. A focused examination experience. Engineered for deterministic lockdown and zero interruption. Dikembangkan oleh FeraExam.
               </p>
             </div>
 
@@ -749,7 +517,7 @@ const HeroSection = ({ config, onInitiateDownload, onOpenHashTool }) => {
                 </div>
                 <div className="flex justify-between text-[#A1A1AA]">
                   <span>Publisher:</span>
-                  <span className="text-[#155EEF] font-bold">AEFERA Core Distribution</span>
+                  <span className="text-[#155EEF] font-bold">FeraExam Official GitHub</span>
                 </div>
               </div>
             </div>
@@ -764,127 +532,104 @@ const HeroSection = ({ config, onInitiateDownload, onOpenHashTool }) => {
 const FeaturesSection = () => {
   const features = [
     {
-      title: 'Exam-Focused Environment',
-      tagline: 'Deterministic Kiosk Containment',
-      description: 'Isolates the testing environment into an exclusive, full-screen workspace. Locks out arbitrary application switching and secondary window popups.',
+      title: 'Akselerasi GPU Chromium Penuh',
+      tagline: 'GPU Rasterization & Zero-Copy Buffers',
+      description: 'Rendering halaman web, canvas, dan animasi ujian super gegas dengan akselerasi GPU murni, memangkas background network overhead dan telemetry bawaan Chromium.',
       status: 'Implemented',
-      icon: Terminal,
+      icon: Zap,
       accent: 'border-[#FF2B22]/40 text-[#FF2B22]'
     },
     {
-      title: 'Simple 1-Click Installation',
-      tagline: 'Lightweight Setup Wizard',
-      description: 'Streamlined desktop installer handles destination configuration, self-registers required runtime libraries, and cleans up temporary setup caches automatically.',
+      title: 'Dukungan Screenshot Penuh',
+      tagline: 'Zero Display Affinity Locks',
+      description: 'Fitur tangkapan layar (screenshot) dan screen recording diizinkan penuh tanpa blackout. Memudahkan pengawasan dan fleksibel untuk berbagai kebutuhan ujian.',
       status: 'Implemented',
-      icon: Box,
+      icon: Eye,
       accent: 'border-[#FF6A24]/40 text-[#FF6A24]'
     },
     {
-      title: 'Secure Process Isolation',
-      tagline: 'Integrity & Clipboard Sanitization',
-      description: 'Monitors testing session boundaries, cleanses transient clipboard state upon launch, and logs integrity heartbeats during formal assessments.',
+      title: 'Kompatibel Semua Web Ujian',
+      tagline: 'Universal Web Support',
+      description: 'Pembatasan URL filter yang kaku telah disesuaikan sehingga seluruh portal CBT, Google Forms, Quizizz, Moodle, dan platform modern terbuka sempurna.',
       status: 'Implemented',
-      icon: ShieldCheck,
+      icon: Globe,
       accent: 'border-[#155EEF]/40 text-[#155EEF]'
     },
     {
-      title: 'Ultra-Lightweight Footprint',
-      tagline: '<90 MB RAM Footprint',
-      description: 'Optimized binary compiled specifically for x86_64 Windows architectures. Fast cold boot in under 500ms without background bloatware or telemetry miners.',
+      title: 'Smart Subprocess Auto-Redirect',
+      tagline: 'Zero-Crash Architecture',
+      description: 'Menjalankan sub-proses client secara langsung akan otomatis dialihkan ke launcher utama FeraExam.exe tanpa melempar fatal error argumen.',
       status: 'Implemented',
-      icon: Cpu,
+      icon: ShieldCheck,
       accent: 'border-[#FFE17D]/40 text-[#FFE17D]'
     },
     {
-      title: 'Verified Release Pipeline',
-      tagline: 'Cryptographic SHA-256 Signatures',
-      description: 'Every official installer executable is authenticated with published SHA-256 digests and signed under AEFERA distribution credentials for foolproof verification.',
+      title: 'Native 32-bit DIB Windows Icons',
+      tagline: '100% WPF .NET 4.8 Stable',
+      description: 'Seluruh aset ikon dikonversi ke format 32-bit DIB Bitmap native, menjamin kestabilan bebas dari exception TypeConverterMarkupExtension pada Windows 10 & 11.',
       status: 'Implemented',
-      icon: Lock,
-      accent: 'border-[#FF2B22]/40 text-[#FF2B22]'
+      icon: Sparkles,
+      accent: 'border-[#FF2B22]/40 text-[#FF6A24]'
     },
     {
-      title: 'Decentralized Server Sync',
-      tagline: 'Offline Exam Caching & Resumption',
-      description: 'Preserves local encrypted assessment checkpoints in case of campus Wi-Fi drops, synchronizing automatically once network connection restores.',
-      status: 'Planned (v2.5.0)',
-      icon: RefreshCw,
-      accent: 'border-purple-500/40 text-purple-400'
+      title: 'Single-Click Setup Installer',
+      tagline: '139.9 MB Ultra LZMA2 Compressed',
+      description: 'Paket installer mandiri lengkap dengan wizard grafis bertema FeraExam, shortcut desktop, start menu, dan sistem uninstaller terintegrasi.',
+      status: 'Implemented',
+      icon: Box,
+      accent: 'border-emerald-500/40 text-emerald-400'
     }
   ];
 
   return (
-    <section id="features" className="py-24 relative border-t border-[#27272A]/50 bg-[#0A0A0A]">
+    <section id="features" className="py-24 relative bg-[#0D0D0D] border-t border-[#1C1C1C]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#151515] border border-[#27272A] text-xs font-mono text-[#FF6A24]">
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-20">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#151515] border border-[#FF2B22]/30 text-xs font-mono text-[#FF6A24]">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>AUTHENTIC CAPABILITIES</span>
+            <span>ARSITEKTUR & FITUR UNGGULAN</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase font-sans">
-            ENGINEERED FOR RIGOR. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF2B22] to-[#FF6A24]">
-              BUILT FOR STABILITY.
-            </span>
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase">
+            KENAPA MEMILIH <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF2B22] via-[#FF6A24] to-[#FFE17D]">FERAEXAM?</span>
           </h2>
           <p className="text-base text-[#A1A1AA]">
-            FeraExam cuts out bloated third-party middleware to provide a rock-solid, focused testing application. Every feature listed here reflects the genuine software build.
+            Dirancang dari pondasi Safe Exam Browser dengan optimalisasi performa maksimal, fleksibilitas tinggi, dan keandalan operasional untuk pengawas maupun peserta ujian.
           </p>
         </div>
 
-        {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feat, idx) => {
-            const Icon = feat.icon;
-            const isPlanned = feat.status.includes('Planned');
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {features.map((item, idx) => {
+            const Icon = item.icon;
             return (
               <div
                 key={idx}
-                className="group relative p-7 rounded-2xl bg-[#121212] border border-[#222222] hover:border-[#FF2B22]/50 hover:bg-[#161616] transition-all duration-300 shadow-[0_10px_25px_rgba(0,0,0,0.5)] flex flex-col justify-between"
+                className="group relative p-8 rounded-2xl bg-[#141414] border border-[#27272A] hover:border-[#FF2B22]/60 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_15px_40px_rgba(255,43,34,0.15)] transition-all duration-300 flex flex-col justify-between"
               >
-                {/* Glow hovering effect */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#FF2B22]/10 via-transparent to-transparent rounded-tr-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
-
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className={`p-3 rounded-xl bg-[#1A1A1A] border ${feat.accent}`}>
+                    <div className={`p-3 rounded-xl bg-[#1E1E1E] border ${item.accent}`}>
                       <Icon className="w-6 h-6" />
                     </div>
-                    <span
-                      className={`text-[10px] font-mono uppercase px-2.5 py-1 rounded-md border ${
-                        isPlanned
-                          ? 'bg-purple-950/40 text-purple-300 border-purple-500/40'
-                          : 'bg-emerald-950/40 text-emerald-300 border-emerald-500/40'
-                      }`}
-                    >
-                      {feat.status}
+                    <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-[#A1A1AA] border border-white/[0.08]">
+                      {item.status}
                     </span>
                   </div>
-
                   <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-[#FF6A24] transition-colors">
-                      {feat.title}
+                    <span className="text-xs font-mono text-[#FF6A24] font-semibold block uppercase tracking-wider">
+                      {item.tagline}
+                    </span>
+                    <h3 className="text-xl font-bold text-white mt-1 group-hover:text-[#FFE17D] transition-colors">
+                      {item.title}
                     </h3>
-                    <p className="text-xs font-mono text-[#FF2B22] mt-0.5">{feat.tagline}</p>
                   </div>
-
                   <p className="text-sm text-[#A1A1AA] leading-relaxed">
-                    {feat.description}
+                    {item.description}
                   </p>
-                </div>
-
-                <div className="pt-6 mt-6 border-t border-[#1F1F1F] flex items-center justify-between text-xs font-mono text-[#71717A]">
-                  <span>AEFERA ARCHITECTURE</span>
-                  <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
                 </div>
               </div>
             );
           })}
         </div>
-
       </div>
     </section>
   );
@@ -1030,7 +775,7 @@ const DownloadSection = ({ config, onInitiateDownload, onOpenHashTool }) => {
                 </button>
 
                 <p className="text-xs text-[#A1A1AA] text-center max-w-md">
-                  By downloading, you verify that you are obtaining the official release from AEFERA Distribution nodes. No telemetry or bloatware bundled.
+                  By downloading, you verify that you are obtaining the official release from FeraExam GitHub Release. No telemetry or bloatware bundled.
                 </p>
               </div>
 
@@ -1775,7 +1520,7 @@ NEXT_PUBLIC_CUSTOM_LOGO_URL=""
 `;
 
   const readmeContent = `# FeraExam Official Distribution Platform
-Built by AEFERA.
+Dikembangkan oleh FeraExam.
 
 ## Architecture
 - Framework: Next.js (App Router) + TypeScript + Tailwind CSS
@@ -2049,7 +1794,7 @@ const Footer = ({ config, onOpenConfig, onOpenHashTool }) => {
                   FERA<span className="text-[#FF2B22]">EXAM</span>
                 </span>
                 <span className="block text-[10px] tracking-widest text-[#A1A1AA] uppercase font-mono">
-                  BUILT BY AEFERA
+                  BUILT BY AFRA4509
                 </span>
               </div>
             </div>
