@@ -408,18 +408,11 @@ const HeroSection = ({ config, onInitiateDownload, onOpenHashTool }) => {
           <div className="lg:col-span-7 text-left space-y-6">
             
             {/* Status Badge */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#151515] border border-[#FF2B22]/40 shadow-[0_0_15px_rgba(255,43,34,0.2)]">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2B22] opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FF6A24]" />
-              </span>
-              <span className="text-xs font-mono font-bold tracking-wider uppercase text-[#F5F5F5]">
-                OFFICIAL EXAM APPLICATION
-              </span>
-              <span className="text-[#A1A1AA] text-xs">|</span>
-              <span className="text-[11px] font-mono text-[#155EEF] font-semibold">
-                FERAEXAM SECURE
-              </span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#151515] border border-zinc-800 text-xs text-zinc-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="font-medium text-white">FeraExam v{config.version}</span>
+              <span className="text-zinc-600">•</span>
+              <span className="text-zinc-400">Windows 10 / 11 (64-Bit)</span>
             </div>
 
             {/* Main Headline */}
@@ -485,23 +478,8 @@ const HeroSection = ({ config, onInitiateDownload, onOpenHashTool }) => {
                 transform: `perspective(1000px) rotateY(${mouseOffset.x}deg) rotateX(${-mouseOffset.y}deg)`
               }}
             >
-              {/* Corner Sci-Fi / Cyberpunk Accents */}
-              <div className="absolute top-3 left-3 w-3 h-3 border-t-2 border-l-2 border-[#FF2B22]" />
-              <div className="absolute top-3 right-3 w-3 h-3 border-t-2 border-r-2 border-[#FF2B22]" />
-              <div className="absolute bottom-3 left-3 w-3 h-3 border-b-2 border-l-2 border-[#FF6A24]" />
-              <div className="absolute bottom-3 right-3 w-3 h-3 border-b-2 border-r-2 border-[#FF6A24]" />
-
-              {/* Status Header inside HUD */}
-              <div className="w-full flex items-center justify-between pb-4 border-b border-[#27272A] text-[11px] font-mono text-[#A1A1AA]">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-emerald-400 font-bold">RELEASE: ACTIVE</span>
-                </div>
-                <span className="text-[#FF6A24]">CHANNEL // {config.releaseChannel}</span>
-              </div>
-
-              {/* Central Mascot Logo */}
-              <div className="py-6 flex justify-center">
+              {/* Central Logo */}
+              <div className="py-4 flex justify-center">
                 <FeraExamLogo size="large" customUrl={config.customLogoUrl} />
               </div>
 
@@ -1886,7 +1864,7 @@ const Footer = ({ config, onOpenConfig, onOpenHashTool }) => {
         {/* Bottom credits */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-[#52525B] gap-4">
           <div>
-            © {currentYear} AEFERA. All rights reserved. FeraExam and the FeraExam Hellfire mascot emblem are trademarks of AEFERA.
+            © {currentYear} FeraExam. Developed by Afra4509. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
             <span className="text-[#71717A]">Windows is a registered trademark of Microsoft Corp.</span>
