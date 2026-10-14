@@ -26,3 +26,8 @@ SafeExamBrowser.Client.exe
 # Log and temp files
 *.log
 *.tmp
+
+# Web / Node dependencies
+node_modules/
+.next/
+dist/
