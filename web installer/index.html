@@ -1,723 +1,1423 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FeraExam — Browser Ujian Modern, Cepat &amp; Teroptimasi</title>
+  <title>FeraExam — Modern &amp; GPU-Accelerated Safe Exam Browser</title>
+  <meta name="description"
+    content="FeraExam v3.8.0 — Browser ujian modern berbasis Safe Exam Browser (SEB). Akselerasi GPU Chromium, izin screenshot penuh, tanpa penguncian display, dan kompatibel untuk seluruh web ujian." />
+  <meta property="og:title" content="FeraExam — Modern Safe Exam Browser" />
+  <meta property="og:description"
+    content="Distribusi Safe Exam Browser yang telah dirombak untuk performa maksimal di Windows 10/11 (64-Bit). Developed by Afra4509." />
+  <meta property="og:image" content="logo.png" />
   <link rel="icon" type="image/png" href="logo.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace']
-          },
           colors: {
-            brandRed: '#FF2B22',
-            brandOrange: '#FF6A24',
-            brandBlue: '#155EEF',
-            brandGold: '#FFE17D'
+            obsidian: '#0A0A0A',
+            charcoal: '#151515',
+            bone: '#EDE9DF',
+            inferno: '#F04438',
+            pixelBlue: '#2458FF',
+            ash: '#777777',
+            ember: '#FF792F'
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'monospace']
           }
         }
       }
     }
   </script>
+
   <style>
-    body { background-color: #090909; color: #F5F5F5; }
-    ::selection { background: #FF2B22; color: #FFFFFF; }
+    :root {
+      --obsidian: #0A0A0A;
+      --charcoal: #151515;
+      --bone: #EDE9DF;
+      --inferno: #F04438;
+      --pixel-blue: #2458FF;
+      --ash: #777777;
+      --ember: #FF792F;
+    }
+
+    * {
+      box-sizing: border-box;
+      border-radius: 0px !important;
+    }
+
+    body {
+      background-color: var(--obsidian);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      background-image:
+        linear-gradient(to right, rgba(237, 233, 223, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(237, 233, 223, 0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    ::selection {
+      background: var(--inferno);
+      color: var(--obsidian);
+    }
+
+    /* Crisp Pixel Art & Stepped Corners */
+    .pixel-art {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    /* Stepped 2-pixel corner notch via clip-path */
+    .pixel-box {
+      position: relative;
+      background: var(--charcoal);
+      border: 1px solid rgba(237, 233, 223, 0.22);
+      box-shadow: 4px 4px 0px #000000;
+    }
+
+    .pixel-box-inferno {
+      position: relative;
+      background: var(--charcoal);
+      border: 1px solid var(--inferno);
+      box-shadow: 4px 4px 0px rgba(240, 68, 56, 0.25);
+    }
+
+    .pixel-box-blue {
+      position: relative;
+      background: var(--charcoal);
+      border: 1px solid var(--pixel-blue);
+      box-shadow: 4px 4px 0px rgba(36, 88, 255, 0.25);
+    }
+
+    /* Ordered Bayer Dither Pattern */
+    .dither-strip {
+      background-image: radial-gradient(rgba(240, 68, 56, 0.35) 1px, transparent 0);
+      background-size: 4px 4px;
+    }
+
+    .dither-bone {
+      background-image: radial-gradient(rgba(237, 233, 223, 0.14) 1px, transparent 0);
+      background-size: 4px 4px;
+    }
+
+    /* Retro OS Dialog Header Bar */
+    .dialog-titlebar {
+      background: linear-gradient(90deg, var(--obsidian) 0%, var(--charcoal) 100%);
+      border-bottom: 1px solid rgba(237, 233, 223, 0.22);
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .dialog-stripes {
+      flex: 1;
+      height: 8px;
+      margin: 0 12px;
+      background: repeating-linear-gradient(0deg,
+          rgba(237, 233, 223, 0.2),
+          rgba(237, 233, 223, 0.2) 1px,
+          transparent 1px,
+          transparent 3px);
+    }
+
+    /* Tactile Pixel Button */
+    .btn-pixel-primary {
+      background-color: var(--inferno);
+      color: var(--obsidian);
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 700;
+      text-transform: uppercase;
+      border: 2px solid var(--bone);
+      box-shadow: 4px 4px 0px var(--bone);
+      transition: transform 80ms steps(2), box-shadow 80ms steps(2), background-color 80ms steps(2);
+    }
+
+    .btn-pixel-primary:hover:not(:disabled) {
+      background-color: var(--bone);
+      color: var(--obsidian);
+      border-color: var(--inferno);
+      box-shadow: 2px 2px 0px var(--inferno);
+      transform: translate(2px, 2px);
+    }
+
+    .btn-pixel-primary:active:not(:disabled) {
+      transform: translate(4px, 4px);
+      box-shadow: 0px 0px 0px transparent;
+    }
+
+    .btn-pixel-secondary {
+      background-color: var(--obsidian);
+      color: var(--bone);
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 500;
+      text-transform: uppercase;
+      border: 1px solid rgba(237, 233, 223, 0.4);
+      box-shadow: 3px 3px 0px rgba(237, 233, 223, 0.15);
+      transition: transform 80ms steps(2), box-shadow 80ms steps(2), border-color 80ms steps(2);
+    }
+
+    .btn-pixel-secondary:hover {
+      border-color: var(--pixel-blue);
+      color: var(--bone);
+      box-shadow: 1px 1px 0px var(--pixel-blue);
+      transform: translate(2px, 2px);
+    }
+
+    /* Corner Coordinate Crosshairs */
+    .crosshair-corner::before,
+    .crosshair-corner::after {
+      content: '+';
+      position: absolute;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--ash);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .crosshair-corner::before {
+      top: -7px;
+      left: -5px;
+    }
+
+    .crosshair-corner::after {
+      bottom: -7px;
+      right: -5px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      ::before,
+      ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--pixel-blue);
+      outline-offset: 2px;
+    }
   </style>
 </head>
-<body class="relative overflow-x-hidden selection:bg-brandRed selection:text-white">
 
-  <!-- Embers Background Canvas -->
-  <canvas id="embersCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-60"></canvas>
+<body class="min-h-screen flex flex-col selection:bg-inferno selection:text-obsidian">
 
-  <!-- Navbar -->
-  <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent">
+  <!-- TOP TECHNICAL CONTROL BAR / EXPERIMENTAL NAVIGATION -->
+  <header class="sticky top-0 z-50 bg-obsidian border-b border-bone/25">
+    <!-- Sub-bar Telemetry Strip -->
+    <div
+      class="bg-charcoal border-b border-bone/15 px-4 py-1 text-[11px] font-mono text-ash flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-4">
+        <span class="text-bone font-semibold flex items-center gap-1.5">
+          <span class="inline-block w-2 h-2 bg-inferno"></span>
+          SYS.ID // FERAEXAM-NODE-01
+        </span>
+        <span class="hidden sm:inline">ARCH: WIN_X64_NT</span>
+        <span class="hidden md:inline">BASE: SEB_CEF_CHROMIUM</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#diagnostics" class="hover:text-bone flex items-center gap-1.5">
+          <span>API_HEALTH:</span>
+          <span id="navHealthBadge" class="px-1.5 py-0.2 bg-obsidian border border-ash/40 text-bone">CHECKING...</span>
+        </a>
+        <span class="text-bone/60">REV // 3.8.0</span>
+      </div>
+    </div>
+
+    <!-- Main Control Panel Navigation -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
-        
-        <!-- Brand -->
-        <a href="#hero" class="flex items-center gap-3.5 group">
-          <div class="relative w-10 h-10 rounded-xl overflow-hidden bg-black/40 border border-brandRed/40 flex items-center justify-center shadow-[0_0_15px_rgba(255,43,34,0.3)] group-hover:scale-105 transition-transform">
-            <img src="logo.png" onerror="this.src='logo github.png'" alt="FeraExam Logo" class="w-full h-full object-contain p-0.5" />
+      <div class="flex items-center justify-between h-14">
+        <!-- Brand Identity -->
+        <a href="#overview" class="flex items-center gap-3 group focus:outline-none">
+          <div class="w-9 h-9 bg-charcoal border border-inferno flex items-center justify-center p-0.5">
+            <img src="logo.png" onerror="this.src='logo github.png'" alt="FeraExam"
+              class="w-full h-full object-contain" />
           </div>
           <div class="flex flex-col">
-            <div class="flex items-center gap-1.5">
-              <span class="font-extrabold text-xl tracking-wider text-white font-mono uppercase group-hover:text-brandOrange transition-colors">
-                FERA<span class="text-brandRed">EXAM</span>
+            <div class="flex items-center gap-2">
+              <span class="font-display font-bold text-lg tracking-tight text-bone uppercase">
+                FERA<span class="text-inferno">EXAM</span>
               </span>
-              <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-brandRed/15 text-brandOrange border border-brandRed/30">
+              <span class="text-[10px] font-mono px-1.5 py-0.5 bg-pixelBlue text-bone font-semibold">
                 v3.8.0
               </span>
             </div>
-            <span class="text-[10px] tracking-widest text-zinc-400 uppercase font-mono">
-              BY AFRA4509
+            <span class="text-[10px] font-mono text-ash tracking-widest uppercase">
+              DEVELOPED BY AFRA4509
             </span>
           </div>
         </a>
 
-        <!-- Desktop Links -->
-        <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
-          <a href="#hero" class="px-3 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors">Home</a>
-          <a href="#features" class="px-3 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors">Fitur</a>
-          <a href="#download" class="px-3 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors">Unduh</a>
-          <a href="#guide" class="px-3 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors">Instalasi</a>
-          <a href="#changelog" class="px-3 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors">Changelog</a>
-          <a href="#faq" class="px-3 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors">FAQ</a>
+        <!-- Desktop Navigation Matrix -->
+        <nav aria-label="Main Navigation" class="hidden md:flex items-center border border-bone/20 bg-charcoal">
+          <a href="#overview" data-nav="overview"
+            class="nav-item px-3.5 py-2 text-xs font-mono uppercase text-bone bg-pixelBlue/20 border-r border-bone/20 hover:bg-bone hover:text-obsidian transition-colors">[01]
+            Overview</a>
+          <a href="#console" data-nav="console"
+            class="nav-item px-3.5 py-2 text-xs font-mono uppercase text-bone/80 border-r border-bone/20 hover:bg-bone hover:text-obsidian transition-colors">[02]
+            Downloads</a>
+          <a href="#features" data-nav="features"
+            class="nav-item px-3.5 py-2 text-xs font-mono uppercase text-bone/80 border-r border-bone/20 hover:bg-bone hover:text-obsidian transition-colors">[03]
+            Features</a>
+          <a href="#documentation" data-nav="documentation"
+            class="nav-item px-3.5 py-2 text-xs font-mono uppercase text-bone/80 border-r border-bone/20 hover:bg-bone hover:text-obsidian transition-colors">[04]
+            Docs</a>
+          <a href="#changelog" data-nav="changelog"
+            class="nav-item px-3.5 py-2 text-xs font-mono uppercase text-bone/80 hover:bg-bone hover:text-obsidian transition-colors">[05]
+            Changelog</a>
         </nav>
 
-        <!-- CTAs -->
-        <div class="hidden md:flex items-center space-x-3">
-          <a href="https://github.com/Afra4509/feraexam" target="_blank" class="px-3.5 py-2 text-xs font-mono text-zinc-300 hover:text-white border border-zinc-700 hover:border-brandBlue/60 bg-zinc-900/80 rounded-lg transition-all flex items-center gap-1.5">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-            <span>GitHub</span>
+        <!-- Action / Mobile Toggle -->
+        <div class="flex items-center gap-2">
+          <a href="#console"
+            class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-mono font-bold uppercase bg-inferno text-obsidian border border-bone hover:bg-bone transition-colors">
+            <svg class="w-3.5 h-3.5 pixel-art" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M7 1h2v7h3l-4 4-4-4h3V1zM2 13h12v2H2v-2z" />
+            </svg>
+            <span>GET_INSTALLER.EXE</span>
           </a>
 
-          <a href="https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Setup.exe" class="relative inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white overflow-hidden group shadow-[0_0_20px_rgba(255,43,34,0.35)] hover:shadow-[0_0_25px_rgba(255,106,36,0.6)] transition-all">
-            <div class="absolute inset-0 bg-gradient-to-r from-brandRed to-brandOrange transition-all duration-300 group-hover:scale-105"></div>
-            <span class="relative z-10 font-mono tracking-tight flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-              Download v3.8.0
-            </span>
-          </a>
+          <button id="mobileMenuBtn" type="button" aria-expanded="false" aria-controls="mobileNavDrawer"
+            aria-label="Toggle Control Menu"
+            class="md:hidden px-3 py-1.5 bg-charcoal border border-bone/40 font-mono text-xs text-bone uppercase hover:border-inferno">
+            [MENU]
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- Mobile Accessible Control Drawer -->
+    <div id="mobileNavDrawer"
+      class="hidden md:hidden bg-charcoal border-t border-bone/25 px-4 py-3 font-mono text-xs space-y-1">
+      <a href="#overview"
+        class="block py-2 px-2 border border-transparent hover:border-bone/30 hover:bg-obsidian text-bone">[01]
+        OVERVIEW</a>
+      <a href="#console"
+        class="block py-2 px-2 border border-transparent hover:border-bone/30 hover:bg-obsidian text-bone">[02] RELEASE
+        CONSOLE & DOWNLOADS</a>
+      <a href="#features"
+        class="block py-2 px-2 border border-transparent hover:border-bone/30 hover:bg-obsidian text-bone">[03]
+        ARCHITECTURE & FEATURES</a>
+      <a href="#documentation"
+        class="block py-2 px-2 border border-transparent hover:border-bone/30 hover:bg-obsidian text-bone">[04]
+        INSTALLATION DOCS</a>
+      <a href="#changelog"
+        class="block py-2 px-2 border border-transparent hover:border-bone/30 hover:bg-obsidian text-bone">[05] VERSION
+        LEDGER</a>
+      <a href="#diagnostics"
+        class="block py-2 px-2 border border-transparent hover:border-bone/30 hover:bg-obsidian text-inferno">[06] API
+        DIAGNOSTICS</a>
+    </div>
   </header>
 
-  <!-- Hero Section -->
-  <main class="relative z-10">
-    <section id="hero" class="relative min-h-[92vh] flex items-center justify-center pt-28 pb-16 overflow-hidden">
-      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[550px] bg-gradient-to-b from-brandRed/20 via-brandOrange/10 to-transparent blur-[140px] pointer-events-none"></div>
+  <main class="flex-1">
 
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
-          <!-- Headline -->
-          <div class="lg:col-span-7 text-left space-y-6">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-300">
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-              <span class="font-medium text-white">FeraExam v3.8.0</span>
-              <span class="text-zinc-600">•</span>
-              <span class="text-zinc-400">Windows 10 / 11 (64-Bit)</span>
+    <!-- 04.B — HERO: ASYMMETRIC SOFTWARE ARTIFACT SHOWCASE -->
+    <section id="overview" class="relative border-b border-bone/20 py-10 lg:py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+
+          <!-- Left Column (7 Cols): Editorial Typography + Technical Spec Strip -->
+          <div class="lg:col-span-7 space-y-6">
+
+            <!-- Upper Release Channel Stamp -->
+            <div
+              class="inline-flex flex-wrap items-center gap-2 border border-bone/30 bg-charcoal p-1 pr-3 font-mono text-xs">
+              <span class="bg-inferno text-obsidian font-bold px-2 py-0.5 uppercase">CHANNEL: STABLE</span>
+              <span class="text-bone">BUILD // v3.8.0-WIN64</span>
+              <span class="text-ash">|</span>
+              <span class="text-ember">MPL-2.0 LICENSE</span>
             </div>
 
-            <div class="space-y-3">
-              <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white uppercase font-sans leading-[1.08]">
-                THE NEXT-GEN <br />
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brandRed via-brandOrange to-brandGold drop-shadow-[0_2px_15px_rgba(255,43,34,0.4)]">
-                  EXAM BROWSER.
+            <!-- Editorial Wordmark & Factual Statement -->
+            <div class="space-y-4">
+              <div class="text-[11px] font-mono text-ash uppercase tracking-widest">
+                COORD: 0x00F4A // SUBSYSTEM: SAFE_EXAM_BROWSER_FORK
+              </div>
+              <h1
+                class="font-display font-bold text-5xl sm:text-6xl lg:text-7xl tracking-tight uppercase leading-[0.94] text-bone">
+                FERA<span class="text-inferno">EXAM</span><br />
+                <span class="text-2xl sm:text-4xl lg:text-5xl text-bone/90 font-mono font-semibold block mt-2">
+                  UNSHACKLED EXAM RUNTIME.
                 </span>
               </h1>
-              <p class="text-lg sm:text-xl text-zinc-300 max-w-xl font-normal leading-relaxed">
-                Browser ujian modern berbasis Safe Exam Browser (SEB) yang telah dirombak total: akselerasi GPU Chromium, izin tangkapan layar penuh, tanpa kiosk freeze, dan siap untuk semua platform ujian web.
+              <p
+                class="text-base sm:text-lg text-bone/80 max-w-2xl leading-relaxed font-sans border-l-2 border-inferno pl-4">
+                Distribusi Safe Exam Browser (SEB) yang direkonstruksi untuk Windows 10/11 (x64). Mengaktifkan
+                akselerasi perangkat keras GPU Chromium penuh, menonaktifkan penguncian <code
+                  class="font-mono text-xs bg-charcoal px-1.5 py-0.5 border border-bone/20 text-ember">SetWindowDisplayAffinity</code>
+                untuk izin tangkapan layar, membuka filter URL kaku untuk kompatibilitas semua platform CBT/LMS, dan
+                memperbaiki crash argumen sub-proses.
               </p>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex flex-wrap items-center gap-4 pt-2">
-              <a href="https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Setup.exe" class="relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl text-base font-bold text-white overflow-hidden group shadow-[0_0_30px_rgba(255,43,34,0.45)] hover:shadow-[0_0_40px_rgba(255,106,36,0.7)] transition-all">
-                <div class="absolute inset-0 bg-gradient-to-r from-brandRed via-brandOrange to-brandRed bg-[length:200%_auto] transition-all duration-500 group-hover:bg-right"></div>
-                <svg class="w-5 h-5 relative z-10 transition-transform group-hover:-translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                <span class="relative z-10 font-mono tracking-tight">
-                  Download FeraExam_Setup.exe (139 MB)
-                </span>
-              </a>
+            <!-- Primary Installer Controls -->
+            <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <button type="button" onclick="triggerDirectDownload('installer')"
+                class="btn-pixel-primary px-6 py-4 text-sm flex items-center justify-center gap-3 cursor-pointer">
+                <svg class="w-4 h-4 pixel-art shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M7 1h2v7h3l-4 4-4-4h3V1zM2 13h12v2H2v-2z" />
+                </svg>
+                <span>DOWNLOAD FeraExam_Setup.exe (139.9 MB)</span>
+              </button>
 
-              <a href="https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Portable_v3.8.0.zip" class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-sm font-semibold text-zinc-100 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-brandOrange/60 transition-all font-mono">
-                <span>Versi Portable (.zip)</span>
-                <svg class="w-4 h-4 text-brandOrange" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+              <a href="#documentation"
+                class="btn-pixel-secondary px-5 py-4 text-xs flex items-center justify-center gap-2">
+                <span>[READ_INSTALL_MANUAL]</span>
+                <span class="text-inferno">→</span>
               </a>
             </div>
 
-            <!-- Badges -->
-            <div class="pt-4 border-t border-zinc-800 flex flex-wrap items-center gap-y-3 gap-x-6 text-xs text-zinc-400 font-mono">
-              <div class="flex items-center gap-2">
-                <span class="text-brandOrange">●</span>
-                <span>OS: <strong class="text-white">Windows 10 / 11 (64-Bit)</strong></span>
+            <!-- Compact Technical Metadata Strip -->
+            <div class="pixel-box crosshair-corner p-4 bg-charcoal/90">
+              <div
+                class="text-[10px] font-mono text-ash uppercase mb-2 flex items-center justify-between border-b border-bone/15 pb-1.5">
+                <span>VERIFIED RUNTIME TELEMETRY</span>
+                <span class="text-pixelBlue">■ ENGINE_READY</span>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="text-brandBlue">●</span>
-                <span>Engine: <strong class="text-white">CEF Chromium GPU-Accelerated</strong></span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="text-emerald-400">●</span>
-                <span>Status: <strong class="text-white">v3.8.0 Production Stable</strong></span>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs">
+                <div>
+                  <span class="text-ash block text-[10px]">TARGET OS</span>
+                  <span class="text-bone font-semibold">Windows 10/11 x64</span>
+                </div>
+                <div>
+                  <span class="text-ash block text-[10px]">WEB ENGINE</span>
+                  <span class="text-bone font-semibold">CEF Chromium GPU</span>
+                </div>
+                <div>
+                  <span class="text-ash block text-[10px]">UI FRAMEWORK</span>
+                  <span class="text-bone font-semibold">WPF .NET 4.8 DIB</span>
+                </div>
+                <div>
+                  <span class="text-ash block text-[10px]">DISPLAY AFFINITY</span>
+                  <span class="text-inferno font-semibold">UNLOCKED (CAPTURE OK)</span>
+                </div>
               </div>
             </div>
+
           </div>
 
-          <!-- Logo 3D Showcase -->
-          <div class="lg:col-span-5 flex justify-center items-center relative">
-            <div class="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-zinc-900/90 to-black/95 border border-zinc-800 shadow-[0_20px_50px_rgba(0,0,0,0.9)] backdrop-blur-md flex flex-col items-center w-full max-w-md">
-              
-              <!-- Logo Image with Subtle Ambient Glow -->
-              <div class="py-4 relative group flex items-center justify-center">
-                <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-brandRed/30 via-brandOrange/20 to-brandBlue/20 blur-2xl group-hover:blur-3xl transition-all duration-700 pointer-events-none"></div>
-                <img src="logo.png" onerror="this.src='logo github.png'" alt="FeraExam Logo" class="relative z-10 w-64 h-64 sm:w-72 sm:h-72 object-contain rounded-2xl drop-shadow-[0_15px_35px_rgba(255,43,34,0.4)] group-hover:scale-105 transition-transform duration-500" />
+          <!-- Right Column (5 Cols): Off-Center Infernal Mascot Artwork Artifact -->
+          <div class="lg:col-span-5 lg:mt-4">
+            <div class="pixel-box-inferno bg-obsidian">
+              <!-- Retro OS Window Header -->
+              <div class="dialog-titlebar">
+                <span class="text-inferno font-bold">■ ARTIFACT_VIEWER.EXE</span>
+                <div class="dialog-stripes"></div>
+                <span class="text-bone/70">[1:1_RATIO]</span>
               </div>
 
-              <!-- Metadata Box -->
-              <div class="w-full bg-zinc-950/90 rounded-xl p-3.5 border border-zinc-800/80 space-y-1.5 font-mono text-xs">
-                <div class="flex justify-between text-zinc-400">
-                  <span>Package:</span>
-                  <span class="text-white font-medium">FeraExam_Setup.exe</span>
+              <!-- Preserved Official Infernal Mascot Artwork -->
+              <div
+                class="p-4 sm:p-6 bg-obsidian relative flex flex-col items-center justify-center border-b border-bone/15">
+                <!-- Subtle grid framing without cropping or stretching artwork -->
+                <div class="w-full max-w-[360px] mx-auto border border-bone/20 bg-charcoal p-2">
+                  <img src="logo.png" onerror="this.src='logo github.png'"
+                    alt="FeraExam Official Logo"
+                    class="w-full h-auto object-contain block mx-auto" />
                 </div>
-                <div class="flex justify-between text-zinc-400">
-                  <span>Binary Size:</span>
-                  <span class="text-brandGold font-semibold">139.9 MB</span>
+                <div
+                  class="w-full flex items-center justify-between text-[10px] font-mono text-ash mt-3 pt-2 border-t border-bone/10">
+                  <span>OFFICIAL EMBLEM</span>
+                  <span class="text-ember">v3.8.0 PRODUCTION</span>
                 </div>
-                <div class="flex justify-between text-zinc-400">
-                  <span>Publisher:</span>
-                  <span class="text-brandBlue font-bold">FeraExam / Afra4509</span>
+              </div>
+
+              <!-- Binary Quick-Spec Footer inside Artifact Window -->
+              <div class="p-3.5 bg-charcoal font-mono text-xs space-y-1.5">
+                <div class="flex justify-between">
+                  <span class="text-ash">PRIMARY_BINARY:</span>
+                  <span class="text-bone font-semibold">FeraExam_Setup.exe</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-ash">PORTABLE_ARCHIVE:</span>
+                  <span class="text-bone">FeraExam_Portable_v3.8.0.zip</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-ash">MAINTAINER:</span>
+                  <span class="text-pixelBlue font-bold">FeraExam / Afra4509</span>
                 </div>
               </div>
             </div>
           </div>
 
         </div>
+
       </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-24 relative bg-zinc-950 border-t border-zinc-900">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        <div class="text-center max-w-3xl mx-auto space-y-4 mb-20">
-          <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-brandOrange">
-            <span>FITUR UTAMA</span>
+    <!-- 04.C & 04.D — RELEASE CONSOLE & FUNCTIONAL DOWNLOAD SYSTEM -->
+    <section id="console" class="py-16 border-b border-bone/20 bg-charcoal/40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4 border-b border-bone/20 pb-4">
+          <div>
+            <div class="font-mono text-xs text-inferno uppercase tracking-widest mb-1">
+              // SECTION 02 — RELEASE CONSOLE & BINARY DISPATCH
+            </div>
+            <h2 class="font-display font-bold text-3xl sm:text-4xl uppercase text-bone tracking-tight">
+              SOFTWARE RELEASE ARTIFACT CONSOLE
+            </h2>
           </div>
-          <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase">
-            KENAPA MEMILIH <span class="text-transparent bg-clip-text bg-gradient-to-r from-brandRed via-brandOrange to-brandGold">FERAEXAM?</span>
-          </h2>
-          <p class="text-base text-zinc-400">
-            Dirancang dari pondasi Safe Exam Browser dengan optimalisasi performa maksimal, fleksibilitas tinggi, dan keandalan operasional untuk pengawas maupun peserta ujian.
-          </p>
+          <div class="flex items-center gap-3 font-mono text-xs">
+            <button id="refreshReleaseBtn" type="button" onclick="fetchReleaseData(true)"
+              class="btn-pixel-secondary px-3 py-1.5 text-xs cursor-pointer">
+              [SYNC_MANIFEST]
+            </button>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          
-          <div class="group relative p-8 rounded-2xl bg-zinc-900/90 border border-zinc-800 hover:border-brandRed/60 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_15px_40px_rgba(255,43,34,0.15)] transition-all duration-300 flex flex-col justify-between">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <div class="p-3 rounded-xl bg-zinc-800 border border-brandRed/40 text-brandRed">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                </div>
-                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-zinc-400 border border-white/[0.08]">Implemented</span>
-              </div>
-              <div>
-                <span class="text-xs font-mono text-brandOrange font-semibold block uppercase tracking-wider">GPU Rasterization &amp; Zero-Copy</span>
-                <h3 class="text-xl font-bold text-white mt-1 group-hover:text-brandGold transition-colors">Akselerasi GPU Chromium</h3>
-              </div>
-              <p class="text-sm text-zinc-400 leading-relaxed">
-                Rendering halaman web, canvas, dan animasi ujian super gegas dengan akselerasi GPU murni, memangkas background network overhead dan telemetry bawaan Chromium.
-              </p>
+        <!-- Console Main Interface -->
+        <div class="pixel-box bg-obsidian">
+          <div class="dialog-titlebar">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 bg-pixelBlue inline-block"></span>
+              <span class="text-bone font-bold">DISPATCH_CONSOLE // /api/v1/releases/latest</span>
             </div>
+            <div class="dialog-stripes"></div>
+            <span id="consoleSyncStatus" class="text-ember">MANIFEST: LOADED</span>
           </div>
 
-          <div class="group relative p-8 rounded-2xl bg-zinc-900/90 border border-zinc-800 hover:border-brandOrange/60 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_15px_40px_rgba(255,106,36,0.15)] transition-all duration-300 flex flex-col justify-between">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <div class="p-3 rounded-xl bg-zinc-800 border border-brandOrange/40 text-brandOrange">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                </div>
-                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-zinc-400 border border-white/[0.08]">Implemented</span>
-              </div>
-              <div>
-                <span class="text-xs font-mono text-brandOrange font-semibold block uppercase tracking-wider">Zero Display Affinity Locks</span>
-                <h3 class="text-xl font-bold text-white mt-1 group-hover:text-brandGold transition-colors">Dukungan Screenshot Penuh</h3>
-              </div>
-              <p class="text-sm text-zinc-400 leading-relaxed">
-                Fitur tangkapan layar (screenshot) dan screen recording diizinkan penuh tanpa blackout. Memudahkan pengawasan dan fleksibel untuk berbagai kebutuhan ujian.
-              </p>
-            </div>
+          <!-- API Error / Fallback Banner (Hidden unless degraded) -->
+          <div id="consoleAlertBanner"
+            class="hidden bg-inferno/15 border-b border-inferno px-4 py-2.5 font-mono text-xs text-bone flex items-center justify-between gap-4">
+            <span id="consoleAlertText">API endpoint unreachable. Displaying verified local release manifest.</span>
+            <button type="button" onclick="fetchReleaseData(true)"
+              class="px-2.5 py-1 bg-inferno text-obsidian font-bold uppercase">
+              RETRY_SYNC
+            </button>
           </div>
 
-          <div class="group relative p-8 rounded-2xl bg-zinc-900/90 border border-zinc-800 hover:border-brandBlue/60 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_15px_40px_rgba(21,94,239,0.15)] transition-all duration-300 flex flex-col justify-between">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <div class="p-3 rounded-xl bg-zinc-800 border border-brandBlue/40 text-brandBlue">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
-                </div>
-                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-zinc-400 border border-white/[0.08]">Implemented</span>
-              </div>
-              <div>
-                <span class="text-xs font-mono text-brandOrange font-semibold block uppercase tracking-wider">Universal Web Support</span>
-                <h3 class="text-xl font-bold text-white mt-1 group-hover:text-brandGold transition-colors">Kompatibel Semua Web Ujian</h3>
-              </div>
-              <p class="text-sm text-zinc-400 leading-relaxed">
-                Pembatasan URL filter yang kaku telah disesuaikan sehingga seluruh portal CBT, Google Forms, Quizizz, Moodle, dan platform modern terbuka sempurna.
-              </p>
-            </div>
-          </div>
+          <div class="p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-          <div class="group relative p-8 rounded-2xl bg-zinc-900/90 border border-zinc-800 hover:border-brandGold/60 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_15px_40px_rgba(255,225,125,0.15)] transition-all duration-300 flex flex-col justify-between">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <div class="p-3 rounded-xl bg-zinc-800 border border-brandGold/40 text-brandGold">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                </div>
-                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-zinc-400 border border-white/[0.08]">Implemented</span>
-              </div>
-              <div>
-                <span class="text-xs font-mono text-brandOrange font-semibold block uppercase tracking-wider">Zero-Crash Architecture</span>
-                <h3 class="text-xl font-bold text-white mt-1 group-hover:text-brandGold transition-colors">Smart Subprocess Redirect</h3>
-              </div>
-              <p class="text-sm text-zinc-400 leading-relaxed">
-                Menjalankan sub-proses client secara langsung akan otomatis dialihkan ke launcher utama FeraExam.exe tanpa melempar fatal error argumen.
-              </p>
-            </div>
-          </div>
+            <!-- Left 7 Columns: Structured Telemetry Matrix -->
+            <div class="lg:col-span-7 space-y-6">
 
-          <div class="group relative p-8 rounded-2xl bg-zinc-900/90 border border-zinc-800 hover:border-brandOrange/60 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_15px_40px_rgba(255,106,36,0.15)] transition-all duration-300 flex flex-col justify-between">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <div class="p-3 rounded-xl bg-zinc-800 border border-brandOrange/40 text-brandOrange">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                </div>
-                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] text-zinc-400 border border-white/[0.08]">Implemented</span>
-              </div>
-              <div>
-                <span class="text-xs font-mono text-brandOrange font-semibold block uppercase tracking-wider">100% WPF .NET 4.8 Stable</span>
-                <h3 class="text-xl font-bold text-white mt-1 group-hover:text-brandGold transition-colors">Native 32-bit DIB Icons</h3>
-              </div>
-              <p class="text-sm text-zinc-400 leading-relaxed">
-                Seluruh aset ikon dikonversi ke format 32-bit DIB Bitmap native, menjamin kestabilan bebas dari exception TypeConverterMarkupExtension pada Windows 10 &amp; 11.
-              </p>
-            </div>
-          </div>
-
-          <div class="group relative p-8 rounded-2xl bg-zinc-900/90 border border-emerald-500/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] hover:shadow-[0_15px_40px_rgba(16,185,129,0.15)] transition-all duration-300 flex flex-col justify-between">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <div class="p-3 rounded-xl bg-zinc-800 border border-emerald-500/40 text-emerald-400">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                </div>
-                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">139.9 MB</span>
-              </div>
-              <div>
-                <span class="text-xs font-mono text-emerald-400 font-semibold block uppercase tracking-wider">Single-File Setup Wizard</span>
-                <h3 class="text-xl font-bold text-white mt-1 group-hover:text-brandGold transition-colors">Single-Click Installer</h3>
-              </div>
-              <p class="text-sm text-zinc-400 leading-relaxed">
-                Paket installer mandiri terkompresi LZMA2 lengkap dengan wizard grafis bertema FeraExam, shortcut desktop, start menu, dan sistem uninstaller terintegrasi.
-              </p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Download Section -->
-    <section id="download" class="py-24 relative bg-black">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-brandOrange">
-            <span>DOWNLOAD</span>
-          </div>
-          <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase">
-            DOWNLOAD <span class="text-transparent bg-clip-text bg-gradient-to-r from-brandRed to-brandOrange">FERAEXAM</span>
-          </h2>
-          <p class="text-base text-zinc-400">
-            Dapatkan installer resmi untuk Windows 64-bit langsung dari GitHub Release. Bersih, bebas bloatware, dan terverifikasi.
-          </p>
-        </div>
-
-        <div class="max-w-4xl mx-auto">
-          <div class="relative rounded-3xl bg-gradient-to-b from-zinc-900 to-zinc-950 border-2 border-brandRed/40 shadow-[0_25px_60px_rgba(255,43,34,0.15)] overflow-hidden">
-            
-            <div class="h-1.5 w-full bg-gradient-to-r from-brandRed via-brandOrange to-brandBlue"></div>
-
-            <div class="p-8 sm:p-12 space-y-8">
-              
-              <!-- Card Header -->
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
-                <div class="flex items-center gap-4">
-                  <img src="logo.png" onerror="this.src='logo github.png'" alt="FeraExam Logo" class="w-16 h-16 rounded-2xl object-contain drop-shadow-[0_0_20px_rgba(255,43,34,0.4)]" />
-                  <div>
-                    <div class="flex items-center gap-2">
-                      <h3 class="text-2xl font-extrabold text-white font-mono">FeraExam Setup</h3>
-                      <span class="px-2 py-0.5 rounded text-xs font-mono bg-brandBlue/20 text-blue-400 border border-brandBlue/40 font-bold">
-                        v3.8.0
-                      </span>
-                    </div>
-                    <p class="text-xs text-zinc-400 font-mono mt-0.5">
-                      Target OS: Windows 10 / 11 (64-bit)
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                  <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs font-mono">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-white">GitHub Release: Online</span>
-                  </div>
-                </div>
+              <!-- Artifact Selector Tabs (Installer EXE vs Portable ZIP) -->
+              <div class="flex flex-wrap gap-2 border-b border-bone/20 pb-4" role="tablist"
+                aria-label="Select Package Format">
+                <button type="button" id="tabInstaller" onclick="selectArtifactType('installer')" role="tab"
+                  aria-selected="true"
+                  class="px-4 py-2 font-mono text-xs font-bold uppercase border border-pixelBlue bg-pixelBlue text-bone cursor-pointer">
+                  [A] SETUP INSTALLER (.EXE)
+                </button>
+                <button type="button" id="tabPortable" onclick="selectArtifactType('portable')" role="tab"
+                  aria-selected="false"
+                  class="px-4 py-2 font-mono text-xs uppercase border border-bone/30 bg-charcoal text-bone/80 hover:border-bone cursor-pointer">
+                  [B] PORTABLE ARCHIVE (.ZIP)
+                </button>
               </div>
 
               <!-- Metadata Grid -->
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-zinc-950 border border-zinc-800 font-mono text-xs">
-                <div>
-                  <span class="text-zinc-500 block text-[10px] uppercase">File Name</span>
-                  <span class="text-white font-semibold block mt-0.5 truncate">FeraExam_Setup.exe</span>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-px bg-bone/20 border border-bone/20 font-mono text-xs">
+                <div class="bg-charcoal p-3.5">
+                  <span class="text-[10px] text-ash block uppercase">LATEST VERSION</span>
+                  <span id="metaVersion" class="text-bone font-bold text-sm mt-0.5 block">v3.8.0</span>
                 </div>
-                <div>
-                  <span class="text-zinc-500 block text-[10px] uppercase">Package Size</span>
-                  <span class="text-brandGold font-semibold block mt-0.5">139.9 MB</span>
+                <div class="bg-charcoal p-3.5">
+                  <span class="text-[10px] text-ash block uppercase">RELEASE DATE</span>
+                  <span id="metaDate" class="text-bone font-semibold mt-0.5 block">2026-10-13</span>
                 </div>
-                <div>
-                  <span class="text-zinc-500 block text-[10px] uppercase">Release Date</span>
-                  <span class="text-white font-semibold block mt-0.5">October 13, 2026</span>
+                <div class="bg-charcoal p-3.5">
+                  <span class="text-[10px] text-ash block uppercase">PLATFORM / ARCH</span>
+                  <span id="metaPlatform" class="text-bone font-semibold mt-0.5 block">windows / x64</span>
                 </div>
-                <div>
-                  <span class="text-zinc-500 block text-[10px] uppercase">Channel</span>
-                  <span class="text-brandOrange font-semibold block mt-0.5">Production Stable</span>
+                <div class="bg-charcoal p-3.5">
+                  <span class="text-[10px] text-ash block uppercase">FILENAME</span>
+                  <span id="metaFilename"
+                    class="text-ember font-semibold mt-0.5 block truncate">FeraExam_Setup.exe</span>
+                </div>
+                <div class="bg-charcoal p-3.5">
+                  <span class="text-[10px] text-ash block uppercase">BINARY SIZE</span>
+                  <span id="metaSize" class="text-bone font-semibold mt-0.5 block">139.9 MB (146,695,680 B)</span>
+                </div>
+                <div class="bg-charcoal p-3.5">
+                  <span class="text-[10px] text-ash block uppercase">CHANNEL STATUS</span>
+                  <span id="metaChannel" class="text-pixelBlue font-bold mt-0.5 block uppercase">STABLE</span>
                 </div>
               </div>
 
-              <!-- Main CTA -->
-              <div class="flex flex-col items-center justify-center space-y-4">
-                <a href="https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Setup.exe" class="w-full sm:w-auto min-w-[340px] py-5 px-10 rounded-2xl font-mono text-base font-bold text-white bg-gradient-to-r from-brandRed via-brandOrange to-brandRed bg-[length:200%_auto] hover:bg-right transition-all duration-300 flex items-center justify-center gap-3 shadow-[0_0_35px_rgba(255,43,34,0.4)] hover:scale-[1.02] active:scale-[0.98]">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                  <span>Download FeraExam_Setup.exe</span>
+              <!-- SHA-256 Checksum Inspector & Copy Interaction -->
+              <div class="bg-charcoal border border-bone/25 p-4 space-y-2 font-mono">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-ash uppercase">SHA-256 INTEGRITY CHECKSUM</span>
+                  <span id="checksumStatusTag"
+                    class="text-[10px] px-1.5 py-0.5 bg-obsidian border border-bone/20 text-bone/80">
+                    CONFIGURED_MANIFEST
+                  </span>
+                </div>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <code id="metaSha256"
+                    class="flex-1 bg-obsidian border border-bone/20 px-3 py-2 text-xs text-bone select-all overflow-x-auto">
+                    SHA256_PENDING_GITHUB_RELEASE_VERIFICATION_MANIFEST_V3_8_0
+                  </code>
+                  <button id="copyShaBtn" type="button" onclick="copyChecksum()"
+                    class="btn-pixel-secondary px-4 py-2 text-xs shrink-0 cursor-pointer">
+                    [COPY_HASH]
+                  </button>
+                </div>
+                <p class="text-[11px] text-ash">
+                  Verifikasi via PowerShell: <code
+                    class="text-bone">Get-FileHash .\FeraExam_Setup.exe -Algorithm SHA256</code>
+                </p>
+              </div>
+
+            </div>
+
+            <!-- Right 5 Columns: Execution & Dispatch Action Panel -->
+            <div class="lg:col-span-5 flex flex-col justify-between bg-charcoal border border-bone/25 p-5 space-y-6">
+              <div class="space-y-4">
+                <div class="flex items-center justify-between border-b border-bone/15 pb-3 font-mono text-xs">
+                  <span class="text-bone font-bold uppercase">BINARY DISPATCH STATE</span>
+                  <span id="dispatchStatusText" class="text-ember font-bold">READY_FOR_TRANSFER</span>
+                </div>
+
+                <div class="space-y-2 font-mono text-xs text-bone/80">
+                  <div class="flex justify-between">
+                    <span class="text-ash">STORAGE PROVIDER:</span>
+                    <span>GitHub Releases CDN</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-ash">COMPRESSION:</span>
+                    <span id="metaCompression">LZMA2 Single-File Wizard</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-ash">REDIRECT POLICY:</span>
+                    <span>HTTPS 302 Verified Origin</span>
+                  </div>
+                </div>
+
+                <!-- Release Notes Summary inside Console -->
+                <div class="bg-obsidian border border-bone/15 p-3 font-mono text-xs space-y-1.5">
+                  <div class="text-ash text-[10px] uppercase">PATCH NOTES SNAPSHOT (v3.8.0):</div>
+                  <ul id="consoleNotesList" class="list-disc list-inside text-bone/90 space-y-1 text-[11px]">
+                    <li>CEF Chromium GPU rasterization &amp; zero-copy enabled</li>
+                    <li>DisplayAffinity screenshot blackout lock removed</li>
+                    <li>Universal CBT/LMS URL filter compatibility</li>
+                    <li>Native 32-bit DIB icons preventing WPF crashes</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Prominent Download Trigger & Secondary Links -->
+              <div class="space-y-3 pt-2">
+                <button id="primaryDownloadBtn" type="button" onclick="triggerDirectDownload()"
+                  class="w-full btn-pixel-primary py-4 px-5 text-sm flex items-center justify-center gap-3 cursor-pointer">
+                  <svg class="w-4 h-4 pixel-art shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M7 1h2v7h3l-4 4-4-4h3V1zM2 13h12v2H2v-2z" />
+                  </svg>
+                  <span id="primaryDownloadLabel">INITIATE DOWNLOAD // FeraExam_Setup.exe</span>
+                </button>
+
+                <div class="flex items-center justify-between text-[11px] font-mono text-ash pt-1">
+                  <a id="directReleaseTagLink" href="https://github.com/Afra4509/feraexam/releases/tag/v3.8.0"
+                    target="_blank" rel="noopener noreferrer" class="hover:text-bone underline">
+                    [VIEW_GITHUB_RELEASE_TAG]
+                  </a>
+                  <a href="https://github.com/Afra4509/feraexam" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-bone underline">
+                    [SOURCE_REPOSITORY]
+                  </a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 04.E — FEATURES AS AN EDITORIAL SCHEMATIC LAYOUT -->
+    <section id="features" class="py-16 border-b border-bone/20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="mb-12 border-b border-bone/20 pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <div class="font-mono text-xs text-inferno uppercase tracking-widest mb-1">
+              // SECTION 03 — SYSTEM ARCHITECTURE & MODIFICATIONS
+            </div>
+            <h2 class="font-display font-bold text-3xl sm:text-5xl uppercase text-bone tracking-tight">
+              ENGINEERED OVERHAUL SPECIFICATIONS
+            </h2>
+          </div>
+          <p class="font-mono text-xs text-ash max-w-md">
+            Setiap modifikasi di bawah ini telah diimplementasikan langsung di dalam kode sumber runtime FeraExam
+            v3.8.0.
+          </p>
+        </div>
+
+        <!-- Editorial Asymmetric Feature Blocks -->
+        <div class="space-y-8">
+
+          <!-- Feature Block 01: Asymmetric 12-Col Split with Technical Schematic -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 border border-bone/25 bg-charcoal">
+            <div
+              class="lg:col-span-4 p-6 border-b lg:border-b-0 lg:border-r border-bone/20 flex flex-col justify-between bg-obsidian">
+              <div>
+                <div class="flex items-center justify-between font-mono text-xs mb-4">
+                  <span class="px-2 py-0.5 bg-inferno text-obsidian font-bold">SPEC // 01</span>
+                  <span class="text-pixelBlue font-semibold">[IMPLEMENTED]</span>
+                </div>
+                <h3 class="font-display font-bold text-2xl uppercase text-bone">
+                  CHROMIUM GPU RASTERIZATION &amp; ZERO-COPY PIPELINE
+                </h3>
+              </div>
+              <div class="mt-6 pt-4 border-t border-bone/15 font-mono text-[11px] text-ash">
+                SUBSYSTEM: CefSharp / Chromium Embedded Framework
+              </div>
+            </div>
+
+            <div class="lg:col-span-8 p-6 lg:p-8 flex flex-col justify-between space-y-6">
+              <p class="text-bone/85 text-base leading-relaxed">
+                Safe Exam Browser standar sering mengalami bottleneck rendering pada ujian berbasis canvas atau animasi
+                DOM berat. FeraExam menginjeksi flag kompilasi GPU langsung ke dalam inisialisasi CEF serta mematikan
+                background telemetry dan sinkronisasi otomatis bawaan Chromium.
+              </p>
+              <!-- Technical Schematic Diagram -->
+              <div class="bg-obsidian border border-bone/20 p-4 font-mono text-xs">
+                <div class="text-ash text-[10px] uppercase mb-2">// RUNTIME CHROMIUM COMMAND-LINE FLAGS PIPELINE</div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-bone">
+                  <div class="border border-inferno/50 p-2.5 bg-charcoal">
+                    <span class="text-inferno block font-bold">--enable-gpu-rasterization</span>
+                    <span class="text-[11px] text-ash">Direct GPU viewport tile rendering</span>
+                  </div>
+                  <div class="border border-pixelBlue/50 p-2.5 bg-charcoal">
+                    <span class="text-pixelBlue block font-bold">--enable-zero-copy</span>
+                    <span class="text-[11px] text-ash">Direct texture memory transfer</span>
+                  </div>
+                  <div class="border border-bone/30 p-2.5 bg-charcoal">
+                    <span class="text-ember block font-bold">TELEMETRY_STRIPPED</span>
+                    <span class="text-[11px] text-ash">Zero background network overhead</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Block 02 & 03: Asymmetric 7 / 5 Split -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Spec 02 (7 Cols) -->
+            <div
+              class="lg:col-span-7 border border-bone/25 bg-charcoal p-6 lg:p-8 flex flex-col justify-between space-y-6">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between font-mono text-xs">
+                  <span class="px-2 py-0.5 bg-bone text-obsidian font-bold">SPEC // 02</span>
+                  <span class="text-ember">ZERO DISPLAY AFFINITY LOCKS</span>
+                </div>
+                <h3 class="font-display font-bold text-2xl uppercase text-bone">
+                  UNRESTRICTED SCREEN CAPTURE &amp; PROCTORING
+                </h3>
+                <p class="text-bone/80 text-sm sm:text-base leading-relaxed">
+                  Kunci <code class="font-mono text-xs text-inferno">WDA_MONITOR</code> / <code
+                    class="font-mono text-xs text-inferno">DisplayAffinity</code> telah dilepas sepenuhnya. Peserta
+                  maupun perangkat lunak pengawas (OBS, Zoom, aplikasi proctoring pihak ketiga, dan tombol PrintScreen)
+                  dapat mengambil tangkapan layar tanpa menghasilkan layar hitam (blackout).
+                </p>
+              </div>
+              <div class="bg-obsidian border border-bone/20 p-3 font-mono text-xs flex items-center justify-between">
+                <span class="text-ash">WIN32_API_HOOK:</span>
+                <span class="text-bone">SetWindowDisplayAffinity → <strong class="text-inferno">BYPASSED
+                    (WDA_NONE)</strong></span>
+              </div>
+            </div>
+
+            <!-- Spec 03 (5 Cols) -->
+            <div
+              class="lg:col-span-5 border border-bone/25 bg-charcoal p-6 lg:p-8 flex flex-col justify-between space-y-6">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between font-mono text-xs">
+                  <span class="px-2 py-0.5 bg-pixelBlue text-bone font-bold">SPEC // 03</span>
+                  <span class="text-bone/70">UNIVERSAL WEB SUPPORT</span>
+                </div>
+                <h3 class="font-display font-bold text-2xl uppercase text-bone">
+                  OPEN CBT &amp; LMS FILTER MATRIX
+                </h3>
+                <p class="text-bone/80 text-sm leading-relaxed">
+                  Filter aturan URL yang kaku telah dikalibrasi ulang agar seluruh platform ujian modern—termasuk Google
+                  Forms, Quizizz, Moodle, Kahoot, dan portal CBT sekolah/kampus—terbuka tanpa interupsi "Page Blocked".
+                </p>
+              </div>
+              <div class="font-mono text-[11px] text-ash border-t border-bone/15 pt-3">
+                COMPATIBILITY: HTTP/HTTPS • WebSockets • WebRTC Media
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Feature Block 04, 05, 06: 3-Column Technical Ledger -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 border border-bone/25 bg-charcoal divide-y md:divide-y-0 md:divide-x divide-bone/20">
+
+            <div class="p-6 space-y-3">
+              <div class="font-mono text-xs text-inferno font-bold">SPEC // 04 — PROCESS GUARD</div>
+              <h4 class="font-display font-bold text-xl uppercase text-bone">SMART SUBPROCESS REDIRECT</h4>
+              <p class="text-sm text-bone/80 leading-relaxed">
+                Menjalankan sub-proses client secara langsung otomatis dialihkan ke launcher utama <code
+                  class="font-mono text-xs text-ember">FeraExam.exe</code> tanpa melempar fatal exception <code
+                  class="font-mono text-xs">Invalid arguments</code>.
+              </p>
+            </div>
+
+            <div class="p-6 space-y-3">
+              <div class="font-mono text-xs text-pixelBlue font-bold">SPEC // 05 — WPF BITMAP ENGINE</div>
+              <h4 class="font-display font-bold text-xl uppercase text-bone">NATIVE 32-BIT DIB ICONS</h4>
+              <p class="text-sm text-bone/80 leading-relaxed">
+                Seluruh aset ikon dikonversi ke format 32-bit DIB Bitmap native untuk mengeliminasi crash <code
+                  class="font-mono text-xs text-ember">TypeConverterMarkupExtension</code> pada runtime .NET Framework
+                4.8 di Windows 10 &amp; 11.
+              </p>
+            </div>
+
+            <div class="p-6 space-y-3">
+              <div class="font-mono text-xs text-ember font-bold">SPEC // 06 — PACKAGING</div>
+              <h4 class="font-display font-bold text-xl uppercase text-bone">LZMA2 SINGLE-FILE WIZARD</h4>
+              <p class="text-sm text-bone/80 leading-relaxed">
+                Paket installer mandiri (<code class="font-mono text-xs">FeraExam_Setup.exe</code>, 139.9 MB) dengan
+                setup wizard bertema FeraExam, registrasi shortcut Desktop/Start Menu, dan uninstaller bersih.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 04.F — INSTALLATION DOCUMENTATION & TROUBLESHOOTING -->
+    <section id="documentation" class="py-16 border-b border-bone/20 bg-charcoal/30">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="mb-10 border-b border-bone/20 pb-4">
+          <div class="font-mono text-xs text-inferno uppercase tracking-widest mb-1">
+            // SECTION 04 — OPERATIONAL MANUAL & DEPLOYMENT GUIDE
+          </div>
+          <h2 class="font-display font-bold text-3xl sm:text-4xl uppercase text-bone tracking-tight">
+            INSTALLATION &amp; RUNTIME DOCUMENTATION
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+          <!-- Left 4 Columns: System Requirements & Uninstallation -->
+          <div class="lg:col-span-4 space-y-6">
+            <div class="pixel-box p-5 space-y-4">
+              <div class="font-mono text-xs font-bold uppercase text-inferno border-b border-bone/20 pb-2">
+                01. SYSTEM REQUIREMENTS
+              </div>
+              <ul class="font-mono text-xs space-y-2.5 text-bone/90">
+                <li class="flex justify-between">
+                  <span class="text-ash">OS:</span>
+                  <span>Windows 10 / 11 (64-bit)</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="text-ash">RUNTIME:</span>
+                  <span>.NET Framework 4.8 (Built-in)</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="text-ash">VISUAL C++:</span>
+                  <span>VC++ 2015–2022 Redist x64</span>
+                </li>
+                <li class="flex justify-between">
+                  <span class="text-ash">DISK SPACE:</span>
+                  <span>~450 MB Extracted</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="pixel-box p-5 space-y-3">
+              <div class="font-mono text-xs font-bold uppercase text-pixelBlue border-b border-bone/20 pb-2">
+                02. UNINSTALLATION PROCEDURE
+              </div>
+              <p class="text-xs text-bone/80 leading-relaxed">
+                Untuk menghapus instalasi FeraExam secara menyeluruh tanpa meninggalkan residu konfigurasi:
+              </p>
+              <ol class="font-mono text-xs text-bone/90 space-y-1.5 list-decimal list-inside">
+                <li>Buka <strong>Windows Settings → Apps → Installed Apps</strong>.</li>
+                <li>Cari entri <strong>FeraExam v3.8.0</strong> dan pilih <strong>Uninstall</strong>.</li>
+                <li>Atau jalankan <code class="text-ember">unins000.exe</code> langsung dari direktori instalasi
+                  FeraExam.</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Right 8 Columns: Step-by-Step Deployment & Security-Compliant Troubleshooting -->
+          <div class="lg:col-span-8 space-y-6">
+
+            <!-- Numbered Steps -->
+            <div class="pixel-box p-6 space-y-6">
+              <div class="font-mono text-xs font-bold uppercase text-bone border-b border-bone/20 pb-2">
+                03. STANDARD INSTALLATION &amp; FIRST-LAUNCH WORKFLOW
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono">
+                <div class="border border-bone/20 bg-obsidian p-4 space-y-2">
+                  <span class="text-xs bg-inferno text-obsidian font-bold px-1.5 py-0.5">STEP_01</span>
+                  <h4 class="text-sm font-bold text-bone uppercase pt-1">Acquire Binary</h4>
+                  <p class="text-xs text-bone/75 font-sans leading-relaxed">
+                    Unduh <code class="font-mono text-ember">FeraExam_Setup.exe</code> (139.9 MB) melalui Release
+                    Console di atas atau pilih arsip Portable <code class="font-mono">.zip</code> (199.5 MB) jika tidak
+                    memiliki akses Administrator.
+                  </p>
+                </div>
+
+                <div class="border border-bone/20 bg-obsidian p-4 space-y-2">
+                  <span class="text-xs bg-pixelBlue text-bone font-bold px-1.5 py-0.5">STEP_02</span>
+                  <h4 class="text-sm font-bold text-bone uppercase pt-1">Execute Setup Wizard</h4>
+                  <p class="text-xs text-bone/75 font-sans leading-relaxed">
+                    Jalankan installer, pilih lokasi direktori, dan aktifkan opsi pembuatan shortcut Desktop. Untuk
+                    versi Portable, ekstrak seluruh isi ZIP ke satu folder utuh.
+                  </p>
+                </div>
+
+                <div class="border border-bone/20 bg-obsidian p-4 space-y-2">
+                  <span class="text-xs bg-bone text-obsidian font-bold px-1.5 py-0.5">STEP_03</span>
+                  <h4 class="text-sm font-bold text-bone uppercase pt-1">First-Launch &amp; Exam</h4>
+                  <p class="text-xs text-bone/75 font-sans leading-relaxed">
+                    Buka aplikasi melalui launcher utama <code class="font-mono text-ember">FeraExam.exe</code> atau
+                    klik ganda file konfigurasi <code class="font-mono">.seb</code> dari penyelenggara ujian.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Copyable PowerShell Verification Command -->
+              <div class="bg-obsidian border border-bone/20 p-4 font-mono text-xs space-y-2">
+                <div class="flex items-center justify-between text-ash">
+                  <span>// OPTIONAL: VERIFY BINARY SIGNATURE &amp; HASH VIA POWERSHELL</span>
+                  <button type="button" onclick="copyCmd('Get-FileHash .\\FeraExam_Setup.exe -Algorithm SHA256')"
+                    class="text-pixelBlue hover:text-bone">
+                    [COPY_CMD]
+                  </button>
+                </div>
+                <pre
+                  class="text-bone overflow-x-auto"><code>PS C:\Downloads&gt; Get-FileHash .\FeraExam_Setup.exe -Algorithm SHA256</code></pre>
+              </div>
+            </div>
+
+            <!-- Security-Compliant Troubleshooting -->
+            <div class="pixel-box-blue p-6 space-y-4">
+              <div
+                class="font-mono text-xs font-bold uppercase text-ember flex items-center justify-between border-b border-bone/20 pb-2">
+                <span>04. TROUBLESHOOTING &amp; OS SECURITY COMPLIANCE</span>
+                <span class="text-bone/70">[KEEP DEFENDER ENABLED]</span>
+              </div>
+              <div class="space-y-3 text-xs text-bone/85 leading-relaxed">
+                <p>
+                  <strong class="text-bone font-mono uppercase"> jangan matikan antivirus atau keamanan sistem
+                    operasi:</strong> Anda <strong>tidak perlu</strong> menonaktifkan Windows Defender atau kontrol
+                  keamanan Windows untuk menjalankan FeraExam. Jika muncul dialog <em>Windows SmartScreen</em> (karena
+                  sertifikat code-signing komunitas), verifikasi bahwa nama file adalah <code
+                    class="font-mono text-ember">FeraExam_Setup.exe</code> dari repositori resmi <code
+                    class="font-mono">Afra4509/feraexam</code> dan cocokkan nilai checksum SHA-256 sebelum melanjutkan.
+                </p>
+                <p>
+                  <strong class="text-bone font-mono uppercase">Penanganan Sub-Proses:</strong> Jangan menghapus file
+                  DLL di dalam sub-folder <code class="font-mono">CefSharp</code>. Selalu buka aplikasi dari <code
+                    class="font-mono text-ember">FeraExam.exe</code> (bukan executable sub-proses internal—meskipun
+                  v3.8.0 sudah memiliki fitur auto-redirect).
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 04.G — CHANGELOG & RELEASE HISTORY LEDGER -->
+    <section id="changelog" class="py-16 border-b border-bone/20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="mb-10 border-b border-bone/20 pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <div class="font-mono text-xs text-inferno uppercase tracking-widest mb-1">
+              // SECTION 05 — STRUCTURED VERSION LEDGER
+            </div>
+            <h2 class="font-display font-bold text-3xl sm:text-4xl uppercase text-bone tracking-tight">
+              CHANGELOG &amp; RELEASE HISTORY
+            </h2>
+          </div>
+          <span class="font-mono text-xs text-ash">SOURCE: /api/v1/releases</span>
+        </div>
+
+        <!-- Version Ledger Entry: v3.8.0 -->
+        <div class="pixel-box bg-charcoal">
+          <div class="dialog-titlebar">
+            <span class="text-bone font-bold">LEDGER_ENTRY // v3.8.0 (INITIAL PRODUCTION RELEASE)</span>
+            <div class="dialog-stripes"></div>
+            <span class="text-inferno font-bold">2026-10-13</span>
+          </div>
+
+          <div class="p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Left 3 Cols: Version Stamp -->
+            <div
+              class="lg:col-span-3 space-y-3 border-b lg:border-b-0 lg:border-r border-bone/20 pb-4 lg:pb-0 lg:pr-6 font-mono">
+              <div class="text-3xl font-bold text-bone">v3.8.0</div>
+              <div class="inline-block px-2 py-0.5 bg-pixelBlue text-bone text-xs font-bold uppercase">
+                CHANNEL: STABLE
+              </div>
+              <div class="text-xs text-ash space-y-1 pt-2">
+                <div>DATE: 13 Oct 2026</div>
+                <div>SETUP: 139.9 MB</div>
+                <div>PORTABLE: 199.5 MB</div>
+              </div>
+              <div class="pt-3">
+                <a href="https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Setup.exe"
+                  class="inline-block text-xs text-inferno hover:text-bone underline">
+                  [DIRECT_INSTALLER_URI]
                 </a>
+              </div>
+            </div>
 
-                <div class="flex flex-wrap items-center justify-center gap-4 text-xs font-mono pt-2">
-                  <a href="https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Portable_v3.8.0.zip" class="text-zinc-400 hover:text-white underline decoration-dotted flex items-center gap-1.5">
-                    <span>Unduh Versi Portable ZIP (199.5 MB)</span>
-                  </a>
-                  <span class="text-zinc-600">|</span>
-                  <a href="https://github.com/Afra4509/feraexam/releases/tag/v3.8.0" target="_blank" class="text-brandBlue hover:text-blue-400 underline decoration-dotted flex items-center gap-1.5">
-                    <span>Lihat Rilis di GitHub</span>
-                  </a>
+            <!-- Right 9 Cols: Categorized Modifications -->
+            <div class="lg:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
+
+              <div class="space-y-2.5">
+                <div class="text-inferno font-bold uppercase border-b border-inferno/40 pb-1">
+                  [+] NEW FEATURES
                 </div>
+                <ul class="space-y-2 text-bone/85 font-sans">
+                  <li>• Dukungan tangkapan layar (screenshot) penuh tanpa pemblokiran <code
+                      class="font-mono text-[11px]">DisplayAffinity</code>.</li>
+                  <li>• Kompatibilitas ke seluruh website ujian online tanpa filter pembatas URL yang kaku.</li>
+                  <li>• Smart auto-redirect saat sub-proses client dibuka secara langsung.</li>
+                  <li>• Single-file installer setup mandiri terkompresi LZMA2 (<code
+                      class="font-mono text-[11px] text-ember">FeraExam_Setup.exe</code>).</li>
+                </ul>
+              </div>
+
+              <div class="space-y-2.5">
+                <div class="text-pixelBlue font-bold uppercase border-b border-pixelBlue/40 pb-1">
+                  [~] IMPROVEMENTS
+                </div>
+                <ul class="space-y-2 text-bone/85 font-sans">
+                  <li>• Akselerasi GPU Chromium (<code class="font-mono text-[11px]">enable-gpu-rasterization</code>
+                    &amp; <code class="font-mono text-[11px]">enable-zero-copy</code>).</li>
+                  <li>• Pemangkasan background telemetry dan sinkronisasi otomatis Chromium.</li>
+                  <li>• Konversi seluruh ikon ke format native 32-bit DIB Bitmap Windows.</li>
+                  <li>• Rebranding total metadata, splash screen, dan 12 file translasi ke FeraExam.</li>
+                </ul>
+              </div>
+
+              <div class="space-y-2.5">
+                <div class="text-ember font-bold uppercase border-b border-ember/40 pb-1">
+                  [!] BUG FIXES &amp; KNOWN ISSUES
+                </div>
+                <ul class="space-y-2 text-bone/85 font-sans">
+                  <li>• Memperbaiki exception <code class="font-mono text-[11px]">TypeConverterMarkupExtension</code>
+                    pada decoder icon WPF.</li>
+                  <li>• Menghilangkan error <code class="font-mono text-[11px]">Invalid arguments</code> pada eksekusi
+                    client mandiri.</li>
+                  <li>• Menghilangkan delay/hang saat proses penutupan jendela runtime.</li>
+                  <li class="text-ash pt-1 font-mono text-[11px]">KNOWN ISSUE: Khusus Windows 10/11 64-bit; build
+                    macOS/Linux belum tersedia.</li>
+                </ul>
               </div>
 
             </div>
+
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- Installation Guide -->
-    <section id="guide" class="py-24 relative bg-zinc-950 border-t border-zinc-900">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-brandOrange">
-            <span>PANDUAN</span>
+    <!-- 04.H — API STATUS & LIVE DIAGNOSTICS -->
+    <section id="diagnostics" class="py-12 bg-obsidian">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="pixel-box p-6 bg-charcoal">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-bone/20 pb-4 mb-6">
+            <div>
+              <div class="font-mono text-xs text-ash uppercase">// SECTION 06 — TELEMETRY &amp; HEALTH PROBE</div>
+              <h2 class="font-display font-bold text-2xl uppercase text-bone">
+                RELEASE API &amp; STORAGE DIAGNOSTICS
+              </h2>
+            </div>
+            <button type="button" onclick="runHealthDiagnostics()"
+              class="btn-pixel-secondary px-4 py-2 text-xs self-start sm:self-auto cursor-pointer">
+              [PING_HEALTH_ENDPOINT]
+            </button>
           </div>
-          <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase">
-            LANGKAH <span class="text-transparent bg-clip-text bg-gradient-to-r from-brandRed via-brandOrange to-brandGold">INSTALASI</span>
-          </h2>
-          <p class="text-base text-zinc-400">
-            Instalasi cepat dan mudah dalam 3 langkah tanpa perlu konfigurasi rumit.
-          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+            <div class="bg-obsidian border border-bone/20 p-4">
+              <span class="text-ash text-[10px] block uppercase">API / RELEASE SERVICE</span>
+              <div class="flex items-center gap-2 mt-1.5">
+                <span id="diagIndicatorDot" class="w-2.5 h-2.5 bg-ash inline-block"></span>
+                <span id="diagServiceStatus" class="text-bone font-bold uppercase">STATUS UNKNOWN</span>
+              </div>
+            </div>
+
+            <div class="bg-obsidian border border-bone/20 p-4">
+              <span class="text-ash text-[10px] block uppercase">ACTIVE DATA SOURCE</span>
+              <span id="diagDataSource" class="text-bone font-semibold mt-1.5 block">PROBING...</span>
+            </div>
+
+            <div class="bg-obsidian border border-bone/20 p-4">
+              <span class="text-ash text-[10px] block uppercase">RESPONSE LATENCY</span>
+              <span id="diagLatency" class="text-ember font-semibold mt-1.5 block">-- ms</span>
+            </div>
+
+            <div class="bg-obsidian border border-bone/20 p-4">
+              <span class="text-ash text-[10px] block uppercase">LAST CHECKED TIMESTAMP</span>
+              <span id="diagTimestamp" class="text-bone/80 mt-1.5 block">--:--:-- UTC</span>
+            </div>
+          </div>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          
-          <div class="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4">
-            <div class="w-10 h-10 rounded-xl bg-brandRed/20 text-brandRed font-mono font-bold flex items-center justify-center border border-brandRed/40">
-              01
-            </div>
-            <h4 class="text-lg font-bold text-white">Unduh Installer</h4>
-            <p class="text-sm text-zinc-400 leading-relaxed">
-              Klik tombol unduh untuk mendapatkan file resmi <code>FeraExam_Setup.exe</code> dari GitHub Releases.
-            </p>
-          </div>
-
-          <div class="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4">
-            <div class="w-10 h-10 rounded-xl bg-brandOrange/20 text-brandOrange font-mono font-bold flex items-center justify-center border border-brandOrange/40">
-              02
-            </div>
-            <h4 class="text-lg font-bold text-white">Jalankan Setup Wizard</h4>
-            <p class="text-sm text-zinc-400 leading-relaxed">
-              Buka file executable, ikuti wizard instalasi 1-klik, dan centang opsi pembuatan shortcut Desktop.
-            </p>
-          </div>
-
-          <div class="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4">
-            <div class="w-10 h-10 rounded-xl bg-brandBlue/20 text-brandBlue font-mono font-bold flex items-center justify-center border border-brandBlue/40">
-              03
-            </div>
-            <h4 class="text-lg font-bold text-white">Mulai Ujian</h4>
-            <p class="text-sm text-zinc-400 leading-relaxed">
-              Buka FeraExam dari Desktop. Browser langsung siap membuka situs ujian apa saja dengan performa maksimal!
-            </p>
-          </div>
-
-        </div>
-
       </div>
     </section>
 
-    <!-- Changelog Section -->
-    <section id="changelog" class="py-24 relative bg-black border-t border-zinc-900">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-brandOrange">
-            <span>CATATAN RILIS</span>
-          </div>
-          <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase">
-            VERSI <span class="text-transparent bg-clip-text bg-gradient-to-r from-brandRed to-brandOrange">v3.8.0</span>
-          </h2>
-          <p class="text-base text-zinc-400">
-            Daftar pembaruan, perbaikan, dan peningkatan performa pada rilis ini.
-          </p>
-        </div>
-
-        <div class="max-w-4xl mx-auto p-8 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-6">
-          <div class="flex items-center justify-between flex-wrap gap-4 pb-4 border-b border-zinc-800">
-            <div>
-              <span class="text-xl font-bold font-mono text-white">FeraExam v3.8.0 (Release Perdana)</span>
-              <span class="block text-xs text-zinc-400 mt-1">Dirilis pada 13 Oktober 2026</span>
-            </div>
-            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-mono font-bold border border-emerald-500/30">
-              Latest Stable
-            </span>
-          </div>
-
-          <div class="space-y-4 text-sm">
-            <div>
-              <h5 class="text-brandOrange font-mono font-bold uppercase text-xs mb-2">Fitur Baru</h5>
-              <ul class="list-disc list-inside space-y-1 text-zinc-300">
-                <li>Dukungan tangkapan layar (screenshot) diizinkan tanpa pemblokiran DisplayAffinity.</li>
-                <li>Dukungan ke seluruh website ujian online tanpa filter pembatas yang kaku.</li>
-                <li>Smart auto-redirect saat sub-proses client dibuka langsung.</li>
-                <li>Single-file installer setup mandiri terkompresi LZMA2 (<code class="text-brandGold">FeraExam_Setup.exe</code>).</li>
-              </ul>
-            </div>
-
-            <div>
-              <h5 class="text-brandBlue font-mono font-bold uppercase text-xs mb-2">Peningkatan &amp; Optimasi</h5>
-              <ul class="list-disc list-inside space-y-1 text-zinc-300">
-                <li>Akselerasi GPU Chromium (<code>enable-gpu-rasterization</code> &amp; <code>enable-zero-copy</code>).</li>
-                <li>Pemangkasan background telemetry dan sinkronisasi otomatis Chromium.</li>
-                <li>Seluruh ikon menggunakan format native 32-bit DIB Bitmap Windows.</li>
-                <li>Total rebranding nama, metadata, splash screen, dan 12 file translasi ke FeraExam.</li>
-              </ul>
-            </div>
-
-            <div>
-              <h5 class="text-emerald-400 font-mono font-bold uppercase text-xs mb-2">Perbaikan Bug</h5>
-              <ul class="list-disc list-inside space-y-1 text-zinc-300">
-                <li>Memperbaiki exception <code>TypeConverterMarkupExtension</code> pada decoder icon WPF.</li>
-                <li>Menghilangkan error <code>Invalid arguments</code> pada eksekusi client mandiri.</li>
-                <li>Menghilangkan delay/hang saat proses penutupan jendela runtime.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section id="faq" class="py-24 relative bg-zinc-950 border-t border-zinc-900">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-brandOrange">
-            <span>FAQ</span>
-          </div>
-          <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight uppercase">
-            FREQUENTLY ASKED <span class="text-transparent bg-clip-text bg-gradient-to-r from-brandRed via-brandOrange to-brandGold">QUESTIONS</span>
-          </h2>
-        </div>
-
-        <div class="max-w-3xl mx-auto space-y-4">
-          
-          <details class="group p-6 rounded-2xl bg-zinc-900 border border-zinc-800 open:border-brandRed/50 transition-colors">
-            <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center">
-              <span>Apa itu FeraExam dan perbedaannya dengan Safe Exam Browser (SEB)?</span>
-              <span class="text-brandOrange group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <p class="text-sm text-zinc-400 mt-4 leading-relaxed">
-              FeraExam adalah browser ujian modern yang dikembangkan berbasis Safe Exam Browser (SEB). FeraExam dirombak total dengan fokus pada performa super gegas (Chromium berakselerasi GPU), fleksibilitas penuh (screenshot diizinkan dan support seluruh website ujian), identitas visual baru, serta penanganan error otomatis yang ramah pengguna.
-            </p>
-          </details>
-
-          <details class="group p-6 rounded-2xl bg-zinc-900 border border-zinc-800 open:border-brandRed/50 transition-colors">
-            <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center">
-              <span>Apakah FeraExam mengizinkan screenshot dan capture layar?</span>
-              <span class="text-brandOrange group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <p class="text-sm text-zinc-400 mt-4 leading-relaxed">
-              Ya! Fitur anti-screenshot (DisplayAffinity Guard) telah dinonaktifkan secara khusus di FeraExam. Pengawas atau sistem proctoring dapat mengambil tangkapan layar tanpa terhalang layar hitam (blackout).
-            </p>
-          </details>
-
-          <details class="group p-6 rounded-2xl bg-zinc-900 border border-zinc-800 open:border-brandRed/50 transition-colors">
-            <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center">
-              <span>Apakah FeraExam bisa membuka semua website ujian online?</span>
-              <span class="text-brandOrange group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <p class="text-sm text-zinc-400 mt-4 leading-relaxed">
-              Ya, seluruh konfigurasi filter URL yang kaku telah disesuaikan agar FeraExam dapat memuat Google Forms, Quizizz, Moodle, Kahoot, portal CBT sekolah/kampus, dan LMS berbasis web modern tanpa pesan "Page Blocked".
-            </p>
-          </details>
-
-          <details class="group p-6 rounded-2xl bg-zinc-900 border border-zinc-800 open:border-brandRed/50 transition-colors">
-            <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center">
-              <span>Bagaimana cara menginstal FeraExam di Windows?</span>
-              <span class="text-brandOrange group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <p class="text-sm text-zinc-400 mt-4 leading-relaxed">
-              Cukup unduh FeraExam_Setup.exe dari halaman ini atau GitHub Releases, jalankan wizard instalasi, dan ikuti instruksi 1-klik. FeraExam akan langsung tersedia di Desktop dan Start Menu Anda.
-            </p>
-          </details>
-
-          <details class="group p-6 rounded-2xl bg-zinc-900 border border-zinc-800 open:border-brandRed/50 transition-colors">
-            <summary class="font-bold text-white cursor-pointer list-none flex justify-between items-center">
-              <span>Apakah tersedia versi portable tanpa perlu install?</span>
-              <span class="text-brandOrange group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <p class="text-sm text-zinc-400 mt-4 leading-relaxed">
-              Ya, kami juga menyediakan paket FeraExam_Portable_v3.8.0.zip di GitHub Release. Cukup ekstrak filenya ke folder mana saja dan klik ganda FeraExam.exe.
-            </p>
-          </details>
-
-        </div>
-
-      </div>
-    </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="relative bg-black border-t border-zinc-800 pt-16 pb-12 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-zinc-900">
-        
-        <div class="md:col-span-2 space-y-4">
-          <div class="flex items-center gap-3">
-            <img src="logo.png" onerror="this.src='logo github.png'" alt="FeraExam Logo" class="w-10 h-10 rounded-xl object-contain" />
-            <div>
-              <span class="font-extrabold text-lg tracking-wider text-white font-mono uppercase">
-                FERA<span class="text-brandRed">EXAM</span>
-              </span>
-              <span class="block text-[10px] tracking-widest text-zinc-400 uppercase font-mono">
-                OPEN SOURCE PROJECT
-              </span>
-            </div>
+  <!-- 04.I — COMPACT FUNCTIONAL FOOTER -->
+  <footer class="bg-obsidian border-t border-bone/25 py-10 font-mono text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-bone/15">
+
+        <div class="md:col-span-2 space-y-2.5">
+          <div class="flex items-center gap-2.5">
+            <img src="logo.png" onerror="this.src='logo github.png'" alt="FeraExam"
+              class="w-7 h-7 object-contain border border-inferno p-0.5" />
+            <span class="font-display font-bold text-base text-bone uppercase">
+              FERA<span class="text-inferno">EXAM</span> // DEVELOPED BY AFRA4509
+            </span>
           </div>
-          <p class="text-xs text-zinc-400 max-w-sm leading-relaxed">
-            FeraExam adalah perombakan total dari Safe Exam Browser (SEB) yang dirancang untuk memberikan kinerja tinggi, fleksibilitas pengawasan, dan kebebasan kompatibilitas portal web ujian.
+          <p class="text-ash text-xs max-w-md font-sans leading-relaxed">
+            FeraExam adalah distribusi modifikasi dari Safe Exam Browser (SEB). Dirilis di bawah lisensi sumber terbuka
+            Mozilla Public License 2.0 (MPL-2.0). Safe Exam Browser merupakan proyek asli dari ETH Zürich.
           </p>
         </div>
 
-        <div class="space-y-3">
-          <h5 class="text-xs font-mono font-bold text-white uppercase tracking-wider">Distribusi</h5>
-          <ul class="space-y-2 text-xs font-mono text-zinc-400">
-            <li><a href="https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Setup.exe" class="hover:text-brandOrange transition-colors">Windows Installer (.exe)</a></li>
-            <li><a href="https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Portable_v3.8.0.zip" class="hover:text-white transition-colors">Portable ZIP Archive</a></li>
-            <li><a href="https://github.com/Afra4509/feraexam/releases/tag/v3.8.0" class="hover:text-white transition-colors">GitHub Release Tag</a></li>
+        <div class="space-y-2">
+          <div class="text-bone font-bold uppercase">NAVIGATION</div>
+          <ul class="space-y-1.5 text-ash">
+            <li><a href="#overview" class="hover:text-bone">[01] Overview</a></li>
+            <li><a href="#console" class="hover:text-bone">[02] Release Console</a></li>
+            <li><a href="#documentation" class="hover:text-bone">[04] Installation Docs</a></li>
+            <li><a href="#changelog" class="hover:text-bone">[05] Changelog</a></li>
           </ul>
         </div>
 
-        <div class="space-y-3">
-          <h5 class="text-xs font-mono font-bold text-white uppercase tracking-wider">Repositori</h5>
-          <ul class="space-y-2 text-xs font-mono text-zinc-400">
-            <li><a href="https://github.com/Afra4509/feraexam" target="_blank" class="hover:text-white transition-colors">GitHub Source Code</a></li>
-            <li><a href="https://github.com/Afra4509/feraexam/issues" target="_blank" class="hover:text-white transition-colors">Laporkan Isu / Bug</a></li>
-            <li><span class="text-zinc-600">License: MPL 2.0</span></li>
+        <div class="space-y-2">
+          <div class="text-bone font-bold uppercase">EXTERNAL &amp; SUPPORT</div>
+          <ul class="space-y-1.5 text-ash">
+            <li><a href="https://github.com/Afra4509/feraexam" target="_blank" rel="noopener noreferrer"
+                class="hover:text-bone">GitHub Source Repository</a></li>
+            <li><a href="https://github.com/Afra4509/feraexam/issues" target="_blank" rel="noopener noreferrer"
+                class="hover:text-bone">Issue Tracker / Support</a></li>
+            <li><a href="https://github.com/Afra4509/feraexam/releases" target="_blank" rel="noopener noreferrer"
+                class="hover:text-bone">All Published Releases</a></li>
           </ul>
         </div>
 
       </div>
 
-      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-500 gap-4">
-        <div>
-          &copy; 2026 FeraExam. Developed by Afra4509. Berdasarkan lisensi Mozilla Public License 2.0.
-        </div>
-        <div class="text-zinc-600">
-          Safe Exam Browser (SEB) adalah proyek sumber terbuka dari ETH Zürich.
-        </div>
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-ash text-[11px] gap-2">
+        <span>&copy; 2026 FeraExam — Developed by Afra4509. License: MPL 2.0.</span>
+        <span>NO FAKE TELEMETRY // VERIFIED RELEASE MANIFEST</span>
       </div>
     </div>
   </footer>
 
-  <!-- Embers Animation Script -->
+  <!-- CLIENT CONTROLLER: API RESOLUTION, GITHUB FALLBACK, & CONSOLE INTERACTIONS -->
   <script>
-    (function() {
-      const canvas = document.getElementById('embersCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let width = (canvas.width = window.innerWidth);
-      let height = (canvas.height = window.innerHeight);
-
-      window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-      });
-
-      const particleCount = width > 768 ? 60 : 25;
-      const particles = [];
-      const colors = ['rgba(255, 43, 34, ', 'rgba(255, 106, 36, ', 'rgba(255, 175, 40, ', 'rgba(21, 94, 239, '];
-
-      for (let i = 0; i < particleCount; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          size: Math.random() * 2.5 + 0.8,
-          speedY: Math.random() * 1.1 + 0.3,
-          speedX: (Math.random() - 0.5) * 0.5,
-          opacity: Math.random() * 0.7 + 0.2,
-          baseColor: colors[Math.random() > 0.85 ? 3 : Math.floor(Math.random() * 3)],
-          pulseSpeed: Math.random() * 0.02 + 0.01,
-          pulseVal: Math.random() * Math.PI
-        });
-      }
-
-      function render() {
-        ctx.clearRect(0, 0, width, height);
-        particles.forEach((p) => {
-          p.y -= p.speedY;
-          p.x += p.speedX;
-          p.pulseVal += p.pulseSpeed;
-          const currentOpacity = p.opacity * (0.65 + 0.35 * Math.sin(p.pulseVal));
-
-          if (p.y < -10) {
-            p.y = height + 10;
-            p.x = Math.random() * width;
-          }
-          if (p.x < -10) p.x = width + 10;
-          if (p.x > width + 10) p.x = -10;
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = p.baseColor + Math.max(0.1, Math.min(1, currentOpacity)) + ')';
-          ctx.shadowBlur = p.size > 2 ? 8 : 3;
-          ctx.shadowColor = p.baseColor === colors[3] ? '#155EEF' : '#FF2B22';
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        });
-        requestAnimationFrame(render);
-      }
-      render();
-
-      // Navbar scroll effect
-      const navbar = document.getElementById('navbar');
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 30) {
-          navbar.classList.add('bg-black/90', 'backdrop-blur-md', 'border-zinc-800', 'shadow-[0_4px_30px_rgba(0,0,0,0.85)]');
-          navbar.classList.remove('border-transparent');
-        } else {
-          navbar.classList.remove('bg-black/90', 'backdrop-blur-md', 'border-zinc-800', 'shadow-[0_4px_30px_rgba(0,0,0,0.85)]');
-          navbar.classList.add('border-transparent');
+    /**
+     * Verified Baseline Manifest from Repository Configuration
+     * Used if neither /api/v1/releases/latest nor GitHub API is reachable.
+     */
+    const VERIFIED_MANIFEST = {
+      version: "v3.8.0",
+      channel: "stable",
+      platform: "windows",
+      architecture: "x64",
+      releaseDate: "2026-10-13",
+      artifacts: {
+        installer: {
+          filename: "FeraExam_Setup.exe",
+          sizeFormatted: "139.9 MB (146,695,680 B)",
+          sizeBytes: 146695680,
+          sha256: null, // Configurable via environment or release asset digest
+          compression: "LZMA2 Single-File Setup Wizard",
+          downloadUrl: "https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Setup.exe"
+        },
+        portable: {
+          filename: "FeraExam_Portable_v3.8.0.zip",
+          sizeFormatted: "199.5 MB (209,190,912 B)",
+          sizeBytes: 209190912,
+          sha256: null,
+          compression: "ZIP Standalone Archive",
+          downloadUrl: "https://github.com/Afra4509/feraexam/releases/download/v3.8.0/FeraExam_Portable_v3.8.0.zip"
         }
+      },
+      releaseNotes: [
+        "Dukungan tangkapan layar (screenshot) penuh tanpa kunci DisplayAffinity.",
+        "Kompatibilitas semua portal ujian web tanpa pemblokiran filter URL kaku.",
+        "Akselerasi GPU Chromium (enable-gpu-rasterization & enable-zero-copy).",
+        "Smart auto-redirect sub-proses client & native 32-bit DIB icon stability."
+      ]
+    };
+
+    let currentManifest = structuredClone(VERIFIED_MANIFEST);
+    let selectedType = 'installer';
+
+    // Mobile Menu Toggle with Keyboard Accessibility
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+    if (mobileMenuBtn && mobileNavDrawer) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isHidden = mobileNavDrawer.classList.toggle('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', String(!isHidden));
       });
-    })();
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes || isNaN(bytes)) return "Unknown Size";
+      const mb = (bytes / (1024 * 1024)).toFixed(1);
+      return `${mb} MB (${Number(bytes).toLocaleString()} B)`;
+    }
+
+    function renderConsoleUI() {
+      const artifact = currentManifest.artifacts[selectedType];
+      document.getElementById('metaVersion').textContent = currentManifest.version;
+      document.getElementById('metaDate').textContent = currentManifest.releaseDate;
+      document.getElementById('metaPlatform').textContent = `${currentManifest.platform} / ${currentManifest.architecture}`;
+      document.getElementById('metaFilename').textContent = artifact.filename;
+      document.getElementById('metaSize').textContent = artifact.sizeFormatted;
+      document.getElementById('metaChannel').textContent = currentManifest.channel.toUpperCase();
+      document.getElementById('metaCompression').textContent = artifact.compression;
+
+      const shaEl = document.getElementById('metaSha256');
+      const shaStatus = document.getElementById('checksumStatusTag');
+      if (artifact.sha256) {
+        shaEl.textContent = artifact.sha256;
+        shaStatus.textContent = "SHA256_VERIFIED";
+        shaStatus.className = "text-[10px] px-1.5 py-0.5 bg-pixelBlue text-bone";
+      } else {
+        shaEl.textContent = "NOT_PUBLISHED_IN_MANIFEST // VERIFY_LOCALLY_VIA_POWERSHELL";
+        shaStatus.textContent = "UNCONFIGURED_IN_MANIFEST";
+        shaStatus.className = "text-[10px] px-1.5 py-0.5 bg-obsidian border border-bone/20 text-ash";
+      }
+
+      document.getElementById('primaryDownloadLabel').textContent = `INITIATE DOWNLOAD // ${artifact.filename}`;
+
+      // Update Tab Active States
+      const tabInst = document.getElementById('tabInstaller');
+      const tabPort = document.getElementById('tabPortable');
+      if (selectedType === 'installer') {
+        tabInst.className = "px-4 py-2 font-mono text-xs font-bold uppercase border border-pixelBlue bg-pixelBlue text-bone cursor-pointer";
+        tabInst.setAttribute('aria-selected', 'true');
+        tabPort.className = "px-4 py-2 font-mono text-xs uppercase border border-bone/30 bg-charcoal text-bone/80 hover:border-bone cursor-pointer";
+        tabPort.setAttribute('aria-selected', 'false');
+      } else {
+        tabPort.className = "px-4 py-2 font-mono text-xs font-bold uppercase border border-pixelBlue bg-pixelBlue text-bone cursor-pointer";
+        tabPort.setAttribute('aria-selected', 'true');
+        tabInst.className = "px-4 py-2 font-mono text-xs uppercase border border-bone/30 bg-charcoal text-bone/80 hover:border-bone cursor-pointer";
+        tabInst.setAttribute('aria-selected', 'false');
+      }
+    }
+
+    function selectArtifactType(type) {
+      selectedType = type === 'portable' ? 'portable' : 'installer';
+      renderConsoleUI();
+    }
+
+    async function fetchReleaseData(manualRetry = false) {
+      const syncStatus = document.getElementById('consoleSyncStatus');
+      const alertBanner = document.getElementById('consoleAlertBanner');
+      syncStatus.textContent = "SYNCING_API...";
+      if (manualRetry) alertBanner.classList.add('hidden');
+
+      const startTime = performance.now();
+
+      // 1. Try internal Next.js API endpoint (/api/v1/releases/latest) first
+      try {
+        const localRes = await fetch('/api/v1/releases/latest', { headers: { 'Accept': 'application/json' } });
+        if (localRes.ok) {
+          const json = await localRes.json();
+          if (json && json.success && json.data) {
+            const d = json.data;
+            currentManifest.version = d.version || currentManifest.version;
+            currentManifest.releaseDate = d.releaseDate ? d.releaseDate.split('T')[0] : currentManifest.releaseDate;
+            currentManifest.artifacts.installer.filename = d.filename || currentManifest.artifacts.installer.filename;
+            if (d.sizeBytes) currentManifest.artifacts.installer.sizeFormatted = formatBytes(d.sizeBytes);
+            currentManifest.artifacts.installer.sha256 = d.sha256 || null;
+            if (d.downloadUrl) currentManifest.artifacts.installer.downloadUrl = d.downloadUrl;
+
+            syncStatus.textContent = "API_V1: OPERATIONAL";
+            updateDiagnosticsUI("OPERATIONAL", "/api/v1/releases/latest", Math.round(performance.now() - startTime));
+            renderConsoleUI();
+            return;
+          }
+        }
+      } catch (_) {
+        // Fallback to GitHub Releases API if running as standalone static file
+      }
+
+      // 2. Query GitHub Official Releases API for Afra4509/feraexam
+      try {
+        const ghRes = await fetch('https://api.github.com/repos/Afra4509/feraexam/releases/latest', {
+          headers: { 'Accept': 'application/vnd.github+json' }
+        });
+        if (!ghRes.ok) throw new Error(`GitHub API HTTP ${ghRes.status}`);
+        const ghData = await ghRes.json();
+
+        currentManifest.version = ghData.tag_name || VERIFIED_MANIFEST.version;
+        if (ghData.published_at) {
+          currentManifest.releaseDate = ghData.published_at.split('T')[0];
+        }
+
+        if (Array.isArray(ghData.assets)) {
+          const exeAsset = ghData.assets.find(a => a.name.endsWith('.exe'));
+          const zipAsset = ghData.assets.find(a => a.name.endsWith('.zip'));
+          if (exeAsset) {
+            currentManifest.artifacts.installer.filename = exeAsset.name;
+            currentManifest.artifacts.installer.sizeBytes = exeAsset.size;
+            currentManifest.artifacts.installer.sizeFormatted = formatBytes(exeAsset.size);
+            currentManifest.artifacts.installer.downloadUrl = exeAsset.browser_download_url;
+            if (exeAsset.digest && exeAsset.digest.startsWith('sha256:')) {
+              currentManifest.artifacts.installer.sha256 = exeAsset.digest.replace('sha256:', '');
+            }
+          }
+          if (zipAsset) {
+            currentManifest.artifacts.portable.filename = zipAsset.name;
+            currentManifest.artifacts.portable.sizeBytes = zipAsset.size;
+            currentManifest.artifacts.portable.sizeFormatted = formatBytes(zipAsset.size);
+            currentManifest.artifacts.portable.downloadUrl = zipAsset.browser_download_url;
+            if (zipAsset.digest && zipAsset.digest.startsWith('sha256:')) {
+              currentManifest.artifacts.portable.sha256 = zipAsset.digest.replace('sha256:', '');
+            }
+          }
+        }
+
+        syncStatus.textContent = "GITHUB_API: SYNCED";
+        updateDiagnosticsUI("OPERATIONAL", "GitHub Releases API", Math.round(performance.now() - startTime));
+        renderConsoleUI();
+      } catch (err) {
+        syncStatus.textContent = "FALLBACK_MANIFEST";
+        alertBanner.classList.remove('hidden');
+        document.getElementById('consoleAlertText').textContent =
+          "Live API rate-limited or offline. Using verified v3.8.0 fallback release manifest.";
+        updateDiagnosticsUI("DEGRADED", "Verified Local Manifest", Math.round(performance.now() - startTime));
+        renderConsoleUI();
+      }
+    }
+
+    function updateDiagnosticsUI(status, source, latencyMs) {
+      const navBadge = document.getElementById('navHealthBadge');
+      const dot = document.getElementById('diagIndicatorDot');
+      const statusEl = document.getElementById('diagServiceStatus');
+      const sourceEl = document.getElementById('diagDataSource');
+      const latencyEl = document.getElementById('diagLatency');
+      const timeEl = document.getElementById('diagTimestamp');
+
+      statusEl.textContent = status;
+      sourceEl.textContent = source;
+      latencyEl.textContent = `${latencyMs} ms`;
+      timeEl.textContent = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+
+      if (status === 'OPERATIONAL') {
+        navBadge.textContent = "OPERATIONAL";
+        navBadge.className = "px-1.5 py-0.2 bg-pixelBlue text-bone font-bold";
+        dot.className = "w-2.5 h-2.5 bg-pixelBlue inline-block";
+      } else if (status === 'DEGRADED') {
+        navBadge.textContent = "DEGRADED";
+        navBadge.className = "px-1.5 py-0.2 bg-ember text-obsidian font-bold";
+        dot.className = "w-2.5 h-2.5 bg-ember inline-block";
+      } else {
+        navBadge.textContent = "UNKNOWN";
+        navBadge.className = "px-1.5 py-0.2 bg-obsidian border border-ash text-ash";
+        dot.className = "w-2.5 h-2.5 bg-ash inline-block";
+      }
+    }
+
+    async function runHealthDiagnostics() {
+      document.getElementById('diagServiceStatus').textContent = "PROBING...";
+      await fetchReleaseData(true);
+    }
+
+    function triggerDirectDownload(overrideType) {
+      const targetKey = overrideType || selectedType;
+      const artifact = currentManifest.artifacts[targetKey];
+      const dispatchState = document.getElementById('dispatchStatusText');
+
+      if (!artifact || !artifact.downloadUrl) {
+        dispatchState.textContent = "ERR: INSTALLER_URL_UNAVAILABLE";
+        dispatchState.className = "text-inferno font-bold";
+        return;
+      }
+
+      dispatchState.textContent = `DISPATCHING // ${artifact.filename}...`;
+      dispatchState.className = "text-pixelBlue font-bold";
+
+      // Trigger verified browser download
+      const link = document.createElement('a');
+      link.href = artifact.downloadUrl;
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(() => {
+        dispatchState.textContent = "TRANSFER_HANDOFF_COMPLETE";
+        dispatchState.className = "text-ember font-bold";
+      }, 1200);
+    }
+
+    async function copyChecksum() {
+      const shaText = document.getElementById('metaSha256').textContent.trim();
+      const btn = document.getElementById('copyShaBtn');
+      try {
+        await navigator.clipboard.writeText(shaText);
+        btn.textContent = "[HASH_COPIED]";
+        setTimeout(() => { btn.textContent = "[COPY_HASH]"; }, 1800);
+      } catch (_) {
+        btn.textContent = "[SELECT_MANUALLY]";
+      }
+    }
+
+    async function copyCmd(cmdText) {
+      try {
+        await navigator.clipboard.writeText(cmdText);
+      } catch (_) { }
+    }
+
+    // Initialize Console & Live API Check on DOM Ready
+    document.addEventListener('DOMContentLoaded', () => {
+      renderConsoleUI();
+      fetchReleaseData(false);
+    });
   </script>
 </body>
+
 </html>
