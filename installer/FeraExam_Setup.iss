@@ -1,8 +1,8 @@
 ; Script generated for FeraExam Installer
 #define MyAppName "FeraExam"
 #define MyAppVersion "3.8.0"
-#define MyAppPublisher "FeraExam"
-#define MyAppURL "https://feraexam.local"
+#define MyAppPublisher "FeraExam / Afra4509"
+#define MyAppURL "https://github.com/Afra4509/feraexam"
 #define MyAppExeName "FeraExam.exe"
 
 [Setup]
@@ -26,6 +26,14 @@ SolidCompression=yes
 WizardStyle=modern
 ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
+
+; Full Windows Executable Metadata (Mitigates Unknown Binary Flags)
+VersionInfoVersion=3.8.0.0
+VersionInfoCompany={#MyAppPublisher}
+VersionInfoDescription=FeraExam Setup Launcher (Windows 64-Bit)
+VersionInfoCopyright=Copyright (C) 2026 FeraExam. Licensed under MPL 2.0.
+VersionInfoProductName={#MyAppName}
+VersionInfoProductVersion=3.8.0.0
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
